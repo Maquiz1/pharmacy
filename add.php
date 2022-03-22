@@ -163,6 +163,50 @@ if($user->isLoggedIn()) {
                 $pageError = $validate->errors();
             }
         }
+        elseif (Input::get('add_batch')){
+            $validate = new validate();
+            $validate = $validate->check($_POST, array(
+                'name' => array(
+                    'required' => true,
+                ),
+                'batch_no' => array(
+                    'required' => true,
+                ),
+                'study' => array(
+                    'required' => true,
+                ),
+                'amount' => array(
+                    'required' => true,
+                ),
+                'manufactured_date' => array(
+                    'required' => true,
+                ),
+                'expire_date' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $user->createRecord('batch', array(
+                        'name' => Input::get('name'),
+                        'study_id' => Input::get('study'),
+                        'batch_no' => Input::get('batch_no'),
+                        'amount' => Input::get('amount'),
+                        'manufactured_date' => Input::get('manufactured_date'),
+                        'expire_date' => Input::get('expire_date'),
+                        'create_on' => date('Y-m-d'),
+                        'status' => 1,
+                        'staff_id'=>$user->data()->id
+                    ));
+
+                    $successMessage = 'Batch Added Successful' ;
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
     }
 }else{
     Redirect::to('index.php');
@@ -351,7 +395,64 @@ if($user->isLoggedIn()) {
 
                     </div>
                 <?php }elseif ($_GET['id'] == 4 && $user->data()->position == 1){?>
+                    <div class="col-md-offset-1 col-md-8">
+                        <div class="head clearfix">
+                            <div class="isw-ok"></div>
+                            <h1>Add Stock Batch</h1>
+                        </div>
+                        <div class="block-fluid">
+                            <form id="validation" method="post" >
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Name: </div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="text" name="name" id="name" required/>
+                                    </div>
+                                </div>
 
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Batch No: </div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="text" name="batch_no" id="name" required/>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Study</div>
+                                    <div class="col-md-9">
+                                        <select name="study" style="width: 100%;" required>
+                                            <option value="">Select study</option>
+                                            <?php foreach ($override->getData('study') as $study){?>
+                                                <option value="<?=$study['id']?>"><?=$study['name']?></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Amount: </div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="text" name="amount" id="name" required/>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Manufactured Date:</div>
+                                    <div class="col-md-9"><input type="text" name="manufactured_date" id="mask_date" required/> <span>Example: 04/10/2012</span></div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Expire Date:</div>
+                                    <div class="col-md-9"><input type="text" name="expire_date" id="mask_date" required/> <span>Example: 04/10/2012</span></div>
+                                </div>
+
+                                <div class="footer tar">
+                                    <input type="submit" name="add_batch" value="Submit" class="btn btn-default">
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
                 <?php }elseif ($_GET['id'] == 5 && $user->data()->position == 1){?>
 
                 <?php }elseif ($_GET['id'] == 6){?>

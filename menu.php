@@ -84,27 +84,16 @@ if($user->data()->accessLevel == 1){
             </li>
 
             <li class="openable">
-                <a href="#"><span class="isw-bookmark"></span><span class="text">Files</span></a>
+                <a href="#"><span class="isw-archive"></span><span class="text">Stock Batch</span></a>
                 <ul>
                     <li>
                         <a href="add.php?id=4">
-                            <span class="glyphicon glyphicon-plus"></span><span class="text">Add Study File</span>
+                            <span class="glyphicon glyphicon-plus"></span><span class="text">Add Stock Batch</span>
                         </a>
                     </li>
                     <li>
                         <a href="add.php?id=8">
-                            <span class="glyphicon glyphicon-plus"></span><span class="text">Request File</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="add.php?id=6">
-                            <span class="glyphicon glyphicon-user"></span><span class="text">Return Files</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="info.php?id=3">
-                            <span class="glyphicon glyphicon-registration-mark"></span><span class="text">Manage Files</span>
+                            <span class="glyphicon glyphicon-list"></span><span class="text">Manage</span>
                         </a>
                     </li>
                 </ul>
