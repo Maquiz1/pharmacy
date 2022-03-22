@@ -13,6 +13,8 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+php/core/init.php
+
 # AWS User-specific
 .idea/**/aws.xml
 
