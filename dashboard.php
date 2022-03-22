@@ -28,7 +28,7 @@ if($user->isLoggedIn()) {
 <html lang="en">
 
 <head>
-    <title> Dashboard - FileTrack </title>
+    <title> Dashboard - Pharmacy </title>
     <?php include "head.php";?>
 </head>
 <body>

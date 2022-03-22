@@ -172,7 +172,7 @@ if($user->isLoggedIn()) {
 <html lang="en">
 
 <head>
-    <title> Add - Phamarcy </title>
+    <title> Add - Pharmacy </title>
     <?php include "head.php";?>
 </head>
 <body>

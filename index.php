@@ -78,7 +78,7 @@ if(!$user->isLoggedIn()) {
 <html lang="en">
 
 <head>
-    <title> Login - FileTrack </title>
+    <title> Login - Pharmacy </title>
     <?php include 'head.php'?>
 </head>
 <body>

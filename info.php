@@ -105,7 +105,7 @@ if($user->isLoggedIn()) {
 <html lang="en">
 
 <head>
-    <title> Info - FileTrack </title>
+    <title> Info - Pharmacy </title>
     <?php include "head.php";?>
 </head>
 <body>
