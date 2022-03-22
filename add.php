@@ -192,6 +192,7 @@ if($user->isLoggedIn()) {
                         'study_id' => Input::get('study'),
                         'batch_no' => Input::get('batch_no'),
                         'amount' => Input::get('amount'),
+                        'notify_amount' => Input::get('notify_amount'),
                         'manufactured_date' => Input::get('manufactured_date'),
                         'expire_date' => Input::get('expire_date'),
                         'create_on' => date('Y-m-d'),
@@ -443,6 +444,13 @@ if($user->isLoggedIn()) {
                                 <div class="row-form clearfix">
                                     <div class="col-md-3">Expire Date:</div>
                                     <div class="col-md-9"><input type="text" name="expire_date" id="mask_date" required/> <span>Example: 04/10/2012</span></div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Notification Amount: </div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="text" name="notify_amount" id="name" required/>
+                                    </div>
                                 </div>
 
                                 <div class="footer tar">
