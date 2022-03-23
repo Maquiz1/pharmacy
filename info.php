@@ -207,6 +207,26 @@ if($user->isLoggedIn()) {
                 $pageError = $validate->errors();
             }
         }
+        elseif (Input::get('edit_drug_cat')){
+            $validate = $validate->check($_POST, array(
+                'name' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $user->updateRecord('drug_cat', array(
+                        'name' => Input::get('name'),
+                    ),Input::get('id'));
+                    $successMessage = 'Drug Category Successful Updated';
+
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
     }
 }else{
     Redirect::to('index.php');
@@ -515,6 +535,71 @@ if($user->isLoggedIn()) {
                                                     <div class="modal-footer">
                                                         <input type="hidden" name="id" value="<?=$site['id']?>">
                                                         <input type="submit" name="edit_site" class="btn btn-warning" value="Save updates">
+                                                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php }?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="head clearfix">
+                            <div class="isw-grid"></div>
+                            <h1>List of Sites</h1>
+                            <ul class="buttons">
+                                <li><a href="#" class="isw-download"></a></li>
+                                <li><a href="#" class="isw-attachment"></a></li>
+                                <li>
+                                    <a href="#" class="isw-settings"></a>
+                                    <ul class="dd-list">
+                                        <li><a href="#"><span class="isw-plus"></span> New document</a></li>
+                                        <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
+                                        <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="block-fluid">
+                            <table cellpadding="0" cellspacing="0" width="100%" class="table">
+                                <thead>
+                                <tr>
+                                    <th width="25%">Name</th>
+                                    <th width="5%">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($override->getData('drug_cat') as $dCat){?>
+                                    <tr>
+                                        <td> <?=$dCat['name']?></td>
+                                        <td><a href="#site<?=$dCat['id']?>" role="button" class="btn btn-info" data-toggle="modal">Edit</a></td>
+                                        <!-- EOF Bootrstrap modal form -->
+                                    </tr>
+                                    <div class="modal fade" id="site<?=$dCat['id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form method="post">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                        <h4>Edit Site Info</h4>
+                                                    </div>
+                                                    <div class="modal-body modal-body-np">
+                                                        <div class="row">
+                                                            <div class="block-fluid">
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Name:</div>
+                                                                    <div class="col-md-9"><input type="text" name="name" value="<?=$dCat['name']?>" required/></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="dr"><span></span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="id" value="<?=$dCat['id']?>">
+                                                        <input type="submit" name="edit_drug_cat" class="btn btn-warning" value="Save updates">
                                                         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
                                                     </div>
                                                 </form>

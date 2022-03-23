@@ -240,6 +240,26 @@ if($user->isLoggedIn()) {
                 $pageError = $validate->errors();
             }
         }
+        elseif (Input::get('add_drug_cat')) {
+            $validate = $validate->check($_POST, array(
+                'name' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $user->createRecord('drug_cat', array(
+                        'name' => Input::get('name'),
+                    ));
+                    $successMessage = 'Drug Category Successful Added';
+
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
     }
 }else{
     Redirect::to('index.php');
@@ -541,8 +561,29 @@ if($user->isLoggedIn()) {
                         </div>
 
                     </div>
-                <?php }elseif ($_GET['id'] == 6){?>
+                <?php }elseif ($_GET['id'] == 6 && $user->data()->position == 1){?>
+                    <div class="col-md-offset-1 col-md-8">
+                        <div class="head clearfix">
+                            <div class="isw-ok"></div>
+                            <h1>Add Drug Category</h1>
+                        </div>
+                        <div class="block-fluid">
+                            <form id="validation" method="post" >
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Name:</div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="text" name="name" id="name"/>
+                                    </div>
+                                </div>
 
+                                <div class="footer tar">
+                                    <input type="submit" name="add_drug_cat" value="Submit" class="btn btn-default">
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
                 <?php }elseif ($_GET['id'] == 7){?>
 
                 <?php }elseif ($_GET['id'] == 8){?>
