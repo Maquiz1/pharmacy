@@ -193,14 +193,36 @@ if($user->isLoggedIn()) {
                         'batch_no' => Input::get('batch_no'),
                         'amount' => Input::get('amount'),
                         'notify_amount' => Input::get('notify_amount'),
+                        'manufacturer' => Input::get('manufacturer'),
                         'manufactured_date' => Input::get('manufactured_date'),
                         'expire_date' => Input::get('expire_date'),
                         'create_on' => date('Y-m-d'),
+                        'details' => Input::get('details'),
                         'status' => 1,
                         'staff_id'=>$user->data()->id
                     ));
 
                     $successMessage = 'Batch Added Successful' ;
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
+        elseif (Input::get('add_site')) {
+            $validate = $validate->check($_POST, array(
+                'name' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $user->createRecord('sites', array(
+                        'name' => Input::get('name'),
+                    ));
+                    $successMessage = 'Site Successful Added';
+
                 } catch (Exception $e) {
                     die($e->getMessage());
                 }
@@ -430,6 +452,18 @@ if($user->isLoggedIn()) {
                                 </div>
 
                                 <div class="row-form clearfix">
+                                    <div class="col-md-5">Select sites:</div>
+                                    <div class="col-md-7">
+                                        <select name="sites[]" id="s2_2" style="width: 100%;" multiple="multiple">
+                                            <option value="">choose a site...</option>
+                                            <?php foreach ($override->getData('sites') as $site){?>
+                                                <option value="<?=$site['id']?>"><?=$site['name']?>></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
                                     <div class="col-md-3">Amount: </div>
                                     <div class="col-md-9">
                                         <input value="" class="validate[required]" type="text" name="amount" id="name" required/>
@@ -437,19 +471,31 @@ if($user->isLoggedIn()) {
                                 </div>
 
                                 <div class="row-form clearfix">
+                                    <div class="col-md-3">Manufacturer:</div>
+                                    <div class="col-md-9"><input type="text" name="manufacturer" id="manufacturer" /></div>
+                                </div>
+
+                                <div class="row-form clearfix">
                                     <div class="col-md-3">Manufactured Date:</div>
-                                    <div class="col-md-9"><input type="text" name="manufactured_date" id="mask_date" required/> <span>Example: 04/10/2012</span></div>
+                                    <div class="col-md-9"><input type="date" name="manufactured_date" required/> <span>Example: 2012-01-01</span></div>
                                 </div>
 
                                 <div class="row-form clearfix">
                                     <div class="col-md-3">Expire Date:</div>
-                                    <div class="col-md-9"><input type="text" name="expire_date" id="mask_date" required/> <span>Example: 04/10/2012</span></div>
+                                    <div class="col-md-9"><input type="date" name="expire_date" required/> <span>Example: 2012-01-0</span></div>
                                 </div>
 
                                 <div class="row-form clearfix">
                                     <div class="col-md-3">Notification Amount: </div>
                                     <div class="col-md-9">
                                         <input value="" class="validate[required]" type="text" name="notify_amount" id="name" required/>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Details: </div>
+                                    <div class="col-md-9">
+                                        <textarea class="" name="details" id="details" rows="4"></textarea>
                                     </div>
                                 </div>
 
@@ -462,7 +508,28 @@ if($user->isLoggedIn()) {
 
                     </div>
                 <?php }elseif ($_GET['id'] == 5 && $user->data()->position == 1){?>
+                    <div class="col-md-offset-1 col-md-8">
+                        <div class="head clearfix">
+                            <div class="isw-ok"></div>
+                            <h1>Add Site</h1>
+                        </div>
+                        <div class="block-fluid">
+                            <form id="validation" method="post" >
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Name:</div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="text" name="name" id="name"/>
+                                    </div>
+                                </div>
 
+                                <div class="footer tar">
+                                    <input type="submit" name="add_site" value="Submit" class="btn btn-default">
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
                 <?php }elseif ($_GET['id'] == 6){?>
 
                 <?php }elseif ($_GET['id'] == 7){?>

@@ -96,6 +96,79 @@ if($user->isLoggedIn()) {
             ),Input::get('id'));
             $successMessage = 'User Deleted Successful';
         }
+        elseif (Input::get('edit_batch')){
+            $validate = new validate();
+            $validate = $validate->check($_POST, array(
+                'name' => array(
+                    'required' => true,
+                ),
+                'batch_no' => array(
+                    'required' => true,
+                ),
+                'study' => array(
+                    'required' => true,
+                ),
+                'amount' => array(
+                    'required' => true,
+                ),
+                'manufactured_date' => array(
+                    'required' => true,
+                ),
+                'expire_date' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $user->updateRecord('batch', array(
+                        'name' => Input::get('name'),
+                        'study_id' => Input::get('study'),
+                        'batch_no' => Input::get('batch_no'),
+                        'amount' => Input::get('amount'),
+                        'notify_amount' => Input::get('notify_amount'),
+                        'manufacturer' => Input::get('manufacturer'),
+                        'manufactured_date' => Input::get('manufactured_date'),
+                        'expire_date' => Input::get('expire_date'),
+                        'create_on' => date('Y-m-d'),
+                        'details' => Input::get('details'),
+                        'status' => 1,
+                        'staff_id'=>$user->data()->id
+                    ), Input::get('id'));
+
+                    $successMessage = 'Batch Updated Successful' ;
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
+        elseif (Input::get('delete_batch')){
+            $user->updateRecord('batch', array(
+                'status' => 0,
+            ),Input::get('id'));
+            $successMessage = 'Batch Deleted Successful';
+        }
+        elseif (Input::get('edit_site')){
+            $validate = $validate->check($_POST, array(
+                'name' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $user->updateRecord('sites', array(
+                        'name' => Input::get('name'),
+                    ),Input::get('id'));
+                    $successMessage = 'Site Successful Updated';
+
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
     }
 }else{
     Redirect::to('index.php');
@@ -350,8 +423,240 @@ if($user->isLoggedIn()) {
                             </table>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="head clearfix">
+                            <div class="isw-grid"></div>
+                            <h1>List of Sites</h1>
+                            <ul class="buttons">
+                                <li><a href="#" class="isw-download"></a></li>
+                                <li><a href="#" class="isw-attachment"></a></li>
+                                <li>
+                                    <a href="#" class="isw-settings"></a>
+                                    <ul class="dd-list">
+                                        <li><a href="#"><span class="isw-plus"></span> New document</a></li>
+                                        <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
+                                        <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="block-fluid">
+                            <table cellpadding="0" cellspacing="0" width="100%" class="table">
+                                <thead>
+                                <tr>
+                                    <th width="25%">Name</th>
+                                    <th width="5%">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($override->getData('sites') as $site){?>
+                                    <tr>
+                                        <td> <?=$site['name']?></td>
+                                        <td><a href="#site<?=$site['id']?>" role="button" class="btn btn-info" data-toggle="modal">Edit</a></td>
+                                        <!-- EOF Bootrstrap modal form -->
+                                    </tr>
+                                    <div class="modal fade" id="site<?=$site['id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form method="post">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                        <h4>Edit Site Info</h4>
+                                                    </div>
+                                                    <div class="modal-body modal-body-np">
+                                                        <div class="row">
+                                                            <div class="block-fluid">
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Name:</div>
+                                                                    <div class="col-md-9"><input type="text" name="name" value="<?=$site['name']?>" required/></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="dr"><span></span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="id" value="<?=$site['id']?>">
+                                                        <input type="submit" name="edit_site" class="btn btn-warning" value="Save updates">
+                                                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php }?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 <?php } elseif ($_GET['id'] == 3){?>
+                    <div class="col-md-12">
+                        <div class="head clearfix">
+                            <div class="isw-grid"></div>
+                            <h1>Batch List</h1>
+                            <ul class="buttons">
+                                <li><a href="#" class="isw-download"></a></li>
+                                <li><a href="#" class="isw-attachment"></a></li>
+                                <li>
+                                    <a href="#" class="isw-settings"></a>
+                                    <ul class="dd-list">
+                                        <li><a href="#"><span class="isw-plus"></span> New document</a></li>
+                                        <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
+                                        <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="block-fluid">
+                            <table cellpadding="0" cellspacing="0" width="100%" class="table">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="checkall"/></th>
+                                    <th width="15%">Name</th>
+                                    <th width="15%">Study</th>
+                                    <th width="15%">Manufacturer</th>
+                                    <th width="10%">Amount</th>
+                                    <th width="10%">Man Date</th>
+                                    <th width="10%">Exp Date</th>
+                                    <th width="5%">Status</th>
+                                    <th width="20%">Manage</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($override->get('batch','status', 1) as $batch){
+                                    $study=$override->get('study','id', $batch['study_id'])[0]?>
+                                    <tr>
+                                        <td><input type="checkbox" name="checkbox"/></td>
+                                        <td> <?=$batch['name']?></td>
+                                        <td><?=$study['name']?></td>
+                                        <td><?=$batch['manufacturer']?></td>
+                                        <td><?=$batch['amount']?></td>
+                                        <td><?=$batch['manufactured_date']?></td>
+                                        <td><?=$batch['expire_date']?></td>
+                                        <td>
+                                            <?php if($batch['amount'] <= $batch['notify_amount'] && $batch['amount'] > 0){?>
+                                                <a href="#" role="button" class="btn btn-warning btn-sm">Running Low</a>
+                                            <?php }elseif ($batch['amount'] == 0){?>
+                                                <a href="#" role="button" class="btn btn-danger">Out of Stock</a>
+                                            <?php }else{?>
+                                                <a href="#" role="button" class="btn btn-success">Sufficient</a>
+                                            <?php }?>
+                                        </td>
+                                        <td>
+                                            <a href="#user<?=$batch['id']?>" role="button" class="btn btn-info" data-toggle="modal">Edit</a>
+                                            <a href="#delete<?=$batch['id']?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
+                                        </td>
 
+                                    </tr>
+                                    <div class="modal fade" id="user<?=$batch['id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <form method="post">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                        <h4>Edit Batch Info</h4>
+                                                    </div>
+                                                    <div class="modal-body modal-body-np">
+                                                        <div class="row">
+                                                            <div class="block-fluid">
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Name: </div>
+                                                                    <div class="col-md-9">
+                                                                        <input value="<?=$batch['name']?>" class="validate[required]" type="text" name="name" id="name" required/>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Batch No: </div>
+                                                                    <div class="col-md-9">
+                                                                        <input value="<?=$batch['batch_no']?>" class="validate[required]" type="text" name="batch_no" id="name" required/>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Study</div>
+                                                                    <div class="col-md-9">
+                                                                        <select name="study" style="width: 100%;" required>
+                                                                            <option value="<?=$study['id']?>"><?=$study['name']?></option>
+                                                                            <?php foreach ($override->getData('study') as $study){?>
+                                                                                <option value="<?=$study['id']?>"><?=$study['name']?></option>
+                                                                            <?php }?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Amount: </div>
+                                                                    <div class="col-md-9">
+                                                                        <input value="<?=$batch['amount']?>" class="validate[required]" type="text" name="amount" id="name" required/>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Manufacturer:</div>
+                                                                    <div class="col-md-9"><input type="text" value="<?=$batch['manufacturer']?>" name="manufacturer" id="manufacturer" /></div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Manufactured Date:</div>
+                                                                    <div class="col-md-9"><input type="date" name="manufactured_date" value="<?=$batch['manufactured_date']?>" required/> </div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Expire Date:</div>
+                                                                    <div class="col-md-9"><input type="date" name="expire_date" value="<?=$batch['expire_date']?>" required/> </div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Notification Amount: </div>
+                                                                    <div class="col-md-9">
+                                                                        <input value="<?=$batch['notify_amount']?>" class="validate[required]" type="text" name="notify_amount" id="name" required/>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Details: </div>
+                                                                    <div class="col-md-9">
+                                                                        <textarea class="" name="details" id="details" rows="4"><?=$batch['details']?></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="dr"><span></span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="id" value="<?=$batch['id']?>">
+                                                        <input type="submit" name="edit_batch" value="Save updates" class="btn btn-warning">
+                                                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="delete<?=$batch['id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <form method="post">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                        <h4>Delete Batch</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <strong style="font-weight: bold;color: red"><p>Are you sure you want to delete this Batch</p></strong>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="id" value="<?=$batch['id']?>">
+                                                        <input type="submit" name="delete_batch" value="Delete" class="btn btn-danger">
+                                                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                <?php }?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 <?php } elseif ($_GET['id'] == 4){?>
                     <div class="col-md-12">
                         <div class="head clearfix">

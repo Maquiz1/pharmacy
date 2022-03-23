@@ -92,7 +92,7 @@ if($user->data()->accessLevel == 1){
                         </a>
                     </li>
                     <li>
-                        <a href="add.php?id=8">
+                        <a href="info.php?id=3">
                             <span class="glyphicon glyphicon-list"></span><span class="text">Manage</span>
                         </a>
                     </li>
@@ -103,8 +103,11 @@ if($user->data()->accessLevel == 1){
                 <a href="#"><span class="isw-tag"></span><span class="text">Extra</span></a>
                 <ul>
                     <li>
-                        <a href="add.php?id=5">
+                        <a href="add.php?id=2">
                             <span class="glyphicon glyphicon-user"></span><span class="text">Add Position</span>
+                        </a>
+                        <a href="add.php?id=5">
+                            <span class="glyphicon glyphicon-home"></span><span class="text">Add Site</span>
                         </a>
                     </li>
                     <li>
