@@ -92,6 +92,11 @@ if($user->data()->accessLevel == 1){
                         </a>
                     </li>
                     <li>
+                        <a href="add.php?id=7">
+                            <span class="glyphicon glyphicon-plus"></span><span class="text">Add Batch Description</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="info.php?id=3">
                             <span class="glyphicon glyphicon-list"></span><span class="text">Manage</span>
                         </a>
