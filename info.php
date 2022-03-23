@@ -169,6 +169,44 @@ if($user->isLoggedIn()) {
                 $pageError = $validate->errors();
             }
         }
+        elseif (Input::get('edit_study')){
+            $validate = $validate->check($_POST, array(
+                'name' => array(
+                    'required' => true,
+                ),
+                'pi' => array(
+                    'required' => true,
+                ),
+                'coordinator' => array(
+                    'required' => true,
+                ),
+                'start_date' => array(
+                    'required' => true,
+                ),
+                'end_date' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $user->updateRecord('study', array(
+                        'name' => Input::get('name'),
+                        'pi_id' => Input::get('pi'),
+                        'co_id' => Input::get('coordinator'),
+                        'start_date' => Input::get('start_date'),
+                        'end_date' => Input::get('end_date'),
+                        'details' => Input::get('details'),
+                    ),Input::get('id'));
+
+                    $successMessage = 'Study Successful Updated';
+
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
     }
 }else{
     Redirect::to('index.php');
@@ -683,10 +721,11 @@ if($user->isLoggedIn()) {
                                     <th width="10%">Name</th>
                                     <th width="10%">PI</th>
                                     <th width="10%">Coordinator</th>
-                                    <th width="10%">Start Data</th>
-                                    <th width="10%">End Data</th>
-                                    <th width="25%">Details</th>
-                                    <th width="10%">status</th>
+                                    <th width="10%">Start Date</th>
+                                    <th width="10%">End Date</th>
+                                    <th width="20%">Details</th>
+                                    <th width="5%">status</th>
+                                    <th width="15%">Sites</th>
                                     <th width="15%">Action</th>
                                 </tr>
                                 </thead>
@@ -710,6 +749,14 @@ if($user->isLoggedIn()) {
                                             <?php }?>
                                         </td>
                                         <td>
+                                            <?php foreach ($override->get('study_sites', 'study_id', $study['id']) as $site){
+                                                $site_name = $override->get('sites', 'id', $site['site_id'])[0];
+                                                if($site_name){
+                                                    echo $site_name['name'].' , ';
+                                                }
+                                            }?>
+                                        </td>
+                                        <td>
                                             <a href="#study<?=$study['id']?>" role="button" class="btn btn-info" data-toggle="modal">Edit</a>
                                             <a href="#delete<?=$study['id']?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
                                         </td>
@@ -721,12 +768,55 @@ if($user->isLoggedIn()) {
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                                        <h4>Edit File Info</h4>
+                                                        <h4>Edit Study Info</h4>
                                                     </div>
                                                     <div class="modal-body modal-body-np">
                                                         <div class="row">
                                                             <div class="block-fluid">
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Name: </div>
+                                                                    <div class="col-md-9">
+                                                                        <input value="<?=$study['name']?>" class="validate[required]" type="text" name="name" id="name" required/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">PI</div>
+                                                                    <div class="col-md-9">
+                                                                        <select name="pi" style="width: 100%;" required>
+                                                                            <option value="<?=$pi['id']?>"><?=$pi['firstname'].' '.$pi['lastname']?></option>
+                                                                            <?php foreach ($override->getData('user') as $staff){?>
+                                                                                <option value="<?=$staff['id']?>"><?=$staff['firstname'].' '.$staff['lastname']?></option>
+                                                                            <?php }?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
 
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Coordinator</div>
+                                                                    <div class="col-md-9">
+                                                                        <select name="coordinator" style="width: 100%;" required>
+                                                                            <option value="<?=$co['id']?>"><?=$co['firstname'].' '.$co['lastname']?></option>
+                                                                            <?php foreach ($override->getData('user') as $staff){?>
+                                                                                <option value="<?=$staff['id']?>"><?=$staff['firstname'].' '.$staff['lastname']?></option>
+                                                                            <?php }?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Start Date:</div>
+                                                                    <div class="col-md-9"><input type="text" name="start_date" value="<?=$study['start_date']?>" required/> <span>Example: 2012-01-01</span></div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">End Date:</div>
+                                                                    <div class="col-md-9"><input type="text" name="end_date" value="<?=$study['end_date']?>" required/> <span>Example: 2012-12-31</span></div>
+                                                                </div>
+
+                                                                <div class="row-form clearfix">
+                                                                    <div class="col-md-3">Study details:</div>
+                                                                    <div class="col-md-9"><textarea name="details" rows="4" required><?=$study['details']?></textarea></div>
+                                                                </div>
                                                             </div>
                                                             <div class="dr"><span></span></div>
                                                         </div>

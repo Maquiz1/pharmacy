@@ -125,6 +125,16 @@ if($user->isLoggedIn()) {
                         'status' => 1,
                         'staff_id' => $user->data()->id,
                     ));
+
+                    $study_id = $override->lastRow('study', 'id')[0];
+
+                    foreach (Input::get('sites') as $site){
+                        $user->createRecord('study_sites', array(
+                            'study_id' => $study_id['id'],
+                            'site_id' => $site,
+                        ));
+                    }
+
                     $successMessage = 'Study Successful Added';
 
                 } catch (Exception $e) {
@@ -239,7 +249,7 @@ if($user->isLoggedIn()) {
 <html lang="en">
 
 <head>
-    <title> Add - Pharmacy </title>
+    <title> Pharmacy </title>
     <?php include "head.php";?>
 </head>
 <body>
@@ -394,14 +404,27 @@ if($user->isLoggedIn()) {
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-5">Select sites:</div>
+                                    <div class="col-md-7">
+                                        <select name="sites[]" id="s2_2" style="width: 100%;" multiple="multiple" required>
+                                            <option value="">choose a site...</option>
+                                            <?php foreach ($override->getData('sites') as $site){?>
+                                                <option value="<?=$site['id']?>"><?=$site['name']?></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="row-form clearfix">
                                     <div class="col-md-3">Start Date:</div>
-                                    <div class="col-md-9"><input type="text" name="start_date" id="mask_date" required/> <span>Example: 04/10/2012</span></div>
+                                    <div class="col-md-9"><input type="date" name="start_date" required/> </div>
                                 </div>
 
                                 <div class="row-form clearfix">
                                     <div class="col-md-3">End Date:</div>
-                                    <div class="col-md-9"><input type="text" name="end_date" id="mask_date" required/> <span>Example: 04/10/2012</span></div>
+                                    <div class="col-md-9"><input type="date" name="end_date" required/> </div>
                                 </div>
 
                                 <div class="row-form clearfix">
@@ -446,18 +469,6 @@ if($user->isLoggedIn()) {
                                             <option value="">Select study</option>
                                             <?php foreach ($override->getData('study') as $study){?>
                                                 <option value="<?=$study['id']?>"><?=$study['name']?></option>
-                                            <?php }?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row-form clearfix">
-                                    <div class="col-md-5">Select sites:</div>
-                                    <div class="col-md-7">
-                                        <select name="sites[]" id="s2_2" style="width: 100%;" multiple="multiple">
-                                            <option value="">choose a site...</option>
-                                            <?php foreach ($override->getData('sites') as $site){?>
-                                                <option value="<?=$site['id']?>"><?=$site['name']?>></option>
                                             <?php }?>
                                         </select>
                                     </div>

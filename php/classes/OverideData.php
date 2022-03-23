@@ -65,5 +65,10 @@ class OverideData{
     public function delete($table,$field,$value){
         return $this->_pdo->query("DELETE FROM $table WHERE $field = $value");
     }
+    public function lastRow($table,$value){
+        $query = $this->_pdo->query("SELECT * FROM $table ORDER BY $value DESC LIMIT 1");
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 
 }
