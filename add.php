@@ -260,6 +260,42 @@ if($user->isLoggedIn()) {
                 $pageError = $validate->errors();
             }
         }
+        elseif (Input::get('add_batch_desc')) {
+            $validate = $validate->check($_POST, array(
+                'batch' => array(
+                    'required' => true,
+                ),
+                'name' => array(
+                    'required' => true,
+                ),
+                'category' => array(
+                    'required' => true,
+                ),
+                'quantity' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $user->createRecord('batch_description', array(
+                        'batch_id' => Input::get('batch'),
+                        'name' => Input::get('name'),
+                        'cat_id' => Input::get('category'),
+                        'quantity' => Input::get('quantity'),
+                        'notify_amount' => Input::get('notify_amount'),
+                        'create_on' => date('Y-m-d'),
+                        'staff_id' => $user->data()->id,
+                        'status' => 1,
+                    ));
+                    $successMessage = 'Batch Description Successful Added';
+
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
     }
 }else{
     Redirect::to('index.php');
@@ -458,7 +494,6 @@ if($user->isLoggedIn()) {
 
                             </form>
                         </div>
-
                     </div>
                 <?php }elseif ($_GET['id'] == 4 && $user->data()->position == 1){?>
                     <div class="col-md-offset-1 col-md-8">
@@ -593,14 +628,52 @@ if($user->isLoggedIn()) {
                         <div class="block-fluid">
                             <form id="validation" method="post" >
                                 <div class="row-form clearfix">
+                                    <div class="col-md-3">Batch</div>
+                                    <div class="col-md-9">
+                                        <select name="batch" style="width: 100%;" required>
+                                            <option value="">Select Batch</option>
+                                            <?php foreach ($override->get('batch','status', 1) as $batch){?>
+                                                <option value="<?=$batch['id']?>"><?=$batch['name'].' '.$batch['batch_no']?></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
                                     <div class="col-md-3">Name:</div>
                                     <div class="col-md-9">
                                         <input value="" class="validate[required]" type="text" name="name" id="name"/>
                                     </div>
                                 </div>
 
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Category</div>
+                                    <div class="col-md-9">
+                                        <select name="category" style="width: 100%;" required>
+                                            <option value="">Select Category</option>
+                                            <?php foreach ($override->getData('drug_cat') as $dCat){?>
+                                                <option value="<?=$dCat['id']?>"><?=$dCat['name']?></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Quantity:</div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="number" name="quantity" id="name"/>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Notification Amount: </div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="text" name="notify_amount" id="name" required/>
+                                    </div>
+                                </div>
+
                                 <div class="footer tar">
-                                    <input type="submit" name="add_drug_cat" value="Submit" class="btn btn-default">
+                                    <input type="submit" name="add_batch_desc" value="Submit" class="btn btn-default">
                                 </div>
 
                             </form>
