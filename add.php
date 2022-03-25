@@ -276,21 +276,28 @@ if($user->isLoggedIn()) {
                 ),
             ));
             if ($validate->passed()) {
-                try {
-                    $user->createRecord('batch_description', array(
-                        'batch_id' => Input::get('batch'),
-                        'name' => Input::get('name'),
-                        'cat_id' => Input::get('category'),
-                        'quantity' => Input::get('quantity'),
-                        'notify_amount' => Input::get('notify_amount'),
-                        'create_on' => date('Y-m-d'),
-                        'staff_id' => $user->data()->id,
-                        'status' => 1,
-                    ));
-                    $successMessage = 'Batch Description Successful Added';
+                $descSum = $override->getSumD1('batch_description','quantity', 'batch_id', Input::get('batch'));
+                $bSum = $override->get('batch', 'id', Input::get('batch'))[0];
+                $dSum = $descSum[0]['SUM(quantity)'] + Input::get('quantity');
+                if($dSum <= $bSum['amount']){
+                    try {
+                        $user->createRecord('batch_description', array(
+                            'batch_id' => Input::get('batch'),
+                            'name' => Input::get('name'),
+                            'cat_id' => Input::get('category'),
+                            'quantity' => Input::get('quantity'),
+                            'notify_amount' => Input::get('notify_amount'),
+                            'create_on' => date('Y-m-d'),
+                            'staff_id' => $user->data()->id,
+                            'status' => 1,
+                        ));
+                        $successMessage = 'Batch Description Successful Added';
 
-                } catch (Exception $e) {
-                    die($e->getMessage());
+                    } catch (Exception $e) {
+                        die($e->getMessage());
+                    }
+                } else{
+                    $errorMessage = 'Exceeded Batch Amount, Please cross check and try again';
                 }
             } else {
                 $pageError = $validate->errors();
@@ -698,9 +705,9 @@ if($user->isLoggedIn()) {
         },'show');
     });
     <?php }?>
-    if ( window.history.replaceState ) {
-        window.history.replaceState( null, null, window.location.href );
-    }
+    // if ( window.history.replaceState ) {
+    //     window.history.replaceState( null, null, window.location.href );
+    // }
     $(document).ready(function(){
         $('#fl_wait').hide();
         $('#wait_ds').hide();
