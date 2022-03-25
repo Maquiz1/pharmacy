@@ -103,6 +103,21 @@ if($user->data()->accessLevel == 1){
                     </li>
                 </ul>
             </li>
+            <li class="openable">
+                <a href="#"><span class="isw-folder"></span><span class="text">Assign Stock</span></a>
+                <ul>
+                    <li>
+                        <a href="add.php?id=8">
+                            <span class="glyphicon glyphicon-plus"></span><span class="text">Assign Stock</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.php?id=3">
+                            <span class="glyphicon glyphicon-list"></span><span class="text">Manage</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
             <li class="openable">
                 <a href="#"><span class="isw-tag"></span><span class="text">Extra</span></a>

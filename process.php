@@ -21,4 +21,16 @@ if($_GET['cnt'] == 'region'){
     <option value="">Select File</option>
     <?php foreach ($sts as $st){?>
         <option value="<?=$st['id']?>"><?=$st['name']?></option>
+<?php }}elseif ($_GET['cnt'] == 'a_study'){
+    $batches=$override->get('batch', 'id', $_GET['getUid']) ?>
+    <option value="">Select Batch</option>
+    <?php foreach ($batches as $batch){?>
+        <option value="<?=$batch['id']?>"><?=$batch['name']?></option>
+<?php }}elseif ($_GET['cnt'] == 'a_batch'){?>
+    <option value="">Select Staff</option>
+    <?php
+    $a_batch=$override->get('batch', 'id', $_GET['getUid'])[0];
+    $a_study_staff=$override->get('staff_study', 'study_id', $a_batch['study_id'])[0];
+    foreach ($a_study_staff as $staff){$stf=$override->get('user','id',$staff['staff_id'])[0]?>
+        <option value="<?=$stf['id']?>"><?=$stf['firstname'].' '.$stf['lastname']?></option>
 <?php }}?>

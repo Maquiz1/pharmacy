@@ -321,6 +321,58 @@ if($user->isLoggedIn()) {
                 $pageError = $validate->errors();
             }
         }
+        elseif (Input::get('assign_stock')) {
+            $validate = $validate->check($_POST, array(
+                'batch' => array(
+                    'required' => true,
+                ),
+                'study' => array(
+                    'required' => true,
+                ),
+                'staff' => array(
+                    'required' => true,
+                ),
+                'quantity' => array(
+                    'required' => true,
+                ),
+            ));
+            if ($validate->passed()) {
+                try {
+                    $checkData = $override->selectData('assigned_stock','staff_id',Input::get('staff'), 'batch_id', Input::get('batch'), 'study_id', Input::get('study'))[0];
+                    if($checkData){
+                        $user->updateRecord('assigned_stock', array(
+                            'quantity' => Input::get('quantity'),
+                            'status' => 1,
+                        ),$checkData['id']);
+                    }else{
+                        $user->createRecord('assigned_stock', array(
+                            'batch_id' => Input::get('batch'),
+                            'study_id' => Input::get('study'),
+                            'staff_id' => Input::get('staff'),
+                            'quantity' => Input::get('quantity'),
+                            'notes' => Input::get('notes'),
+                            'admin_id' => $user->data()->id,
+                            'status' => 1,
+                        ));
+                    }
+                    $user->createRecord('assigned_stock_rec', array(
+                        'batch_id' => Input::get('batch'),
+                        'study_id' => Input::get('study'),
+                        'staff_id' => Input::get('staff'),
+                        'quantity' => Input::get('quantity'),
+                        'notes' => Input::get('notes'),
+                        'create_on' => date('Y-m-d'),
+                        'admin_id' => $user->data()->id,
+                    ));
+                    $successMessage = 'Stock Assigned Successful';
+
+                } catch (Exception $e) {
+                    die($e->getMessage());
+                }
+            } else {
+                $pageError = $validate->errors();
+            }
+        }
     }
 }else{
     Redirect::to('index.php');
@@ -730,7 +782,69 @@ if($user->isLoggedIn()) {
 
                     </div>
                 <?php }elseif ($_GET['id'] == 8){?>
+                    <div class="col-md-offset-1 col-md-8">
+                        <div class="head clearfix">
+                            <div class="isw-ok"></div>
+                            <h1>Assign Stock</h1>
+                        </div>
+                        <div class="block-fluid">
+                            <form id="validation" method="post" >
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Study</div>
+                                    <div class="col-md-9">
+                                        <select name="study" style="width: 100%;" id="study" required>
+                                            <option value="">Select Study</option>
+                                            <?php foreach ($override->get('study', 'status', 1) as $study){?>
+                                                <option value="<?=$study['id']?>"><?=$study['name']?></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Batch</div>
+                                    <div id="ld_batch">
+                                        <span><img src="img/loaders/loader.gif" id="wait_ds1" title="loader.gif"/></span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select name="batch" style="width: 100%;" id="batch" required>
+                                            <option value="">Select batch</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Staff</div>
+                                    <div id="ld_staff">
+                                        <span><img src="img/loaders/loader.gif" id="wait_ds1" title="loader.gif"/></span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select name="staff" style="width: 100%;" id="s2_1" required>
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
 
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Quantity:</div>
+                                    <div class="col-md-9">
+                                        <input value="" class="validate[required]" type="number" name="quantity" id="name"/>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-3">Notes</div>
+                                    <div class="col-md-9">
+                                        <textarea name="notes" rows="4"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="footer tar">
+                                    <input type="submit" name="assign_stock" value="Submit" class="btn btn-default">
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
                 <?php }?>
                 <div class="dr"><span></span></div>
             </div>
@@ -753,6 +867,8 @@ if($user->isLoggedIn()) {
     $(document).ready(function(){
         $('#fl_wait').hide();
         $('#wait_ds').hide();
+        $('#ld_staff').hide();
+        $('#ld_batch').hide();
         $('#region').change(function(){
             var getUid = $(this).val();
             $('#wait_ds').show();
@@ -767,6 +883,41 @@ if($user->isLoggedIn()) {
             });
 
         });
+        $('#study').change(function(){
+            var getUid = $(this).val();
+            $('#ld_batch').show();
+            $.ajax({
+                url:"process.php?cnt=a_study",
+                method:"GET",
+                data:{getUid:getUid},
+                success:function(data){
+                    $('#batch').html(data);
+                    $('#ld_batch').hide();
+                }
+            });
+
+        });
+        $('#batch').change(function(){
+            var getUid = $(this).val();
+            $('#ld_staff').show();
+            $.ajax({
+                url:"process.php?cnt=a_batch",
+                method:"GET",
+                data:{getUid:getUid},
+                success:function(data){
+                    $('#s2_1').html(data);
+                    $('#ld_staff').hide();
+                }
+            });
+
+        });
+
+
+
+
+
+
+
         $('#wait_wd').hide();
         $('#ds_data').change(function(){
             $('#wait_wd').hide();
