@@ -65,6 +65,23 @@ if($user->isLoggedIn()) {
                         'count' => 0,
                         'pswd'=>0,
                     ));
+
+                    $staff_id = $override->lastRow('user', 'id')[0];
+
+                    foreach (Input::get('sites') as $site){
+                        $user->createRecord('staff_sites', array(
+                            'staff_id' => $staff_id['id'],
+                            'site_id' => $site,
+                        ));
+                    }
+
+                    foreach (Input::get('study') as $site){
+                        $user->createRecord('staff_study', array(
+                            'staff_id' => $staff_id['id'],
+                            'site_id' => $site,
+                        ));
+                    }
+
                     $successMessage = 'Account Created Successful';
 
                 } catch (Exception $e) {
@@ -376,6 +393,30 @@ if($user->isLoggedIn()) {
                                     <div class="col-md-3">Username:</div>
                                     <div class="col-md-9">
                                         <input value="" class="validate[required]" type="text" name="username" id="username"/>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-5">Select Study:</div>
+                                    <div class="col-md-7">
+                                        <select name="study[]" id="s2_2" style="width: 100%;" multiple="multiple" required>
+                                            <option value="">choose a study...</option>
+                                            <?php foreach ($override->getData('study') as $study){?>
+                                                <option value="<?=$study['id']?>"><?=$study['name']?></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row-form clearfix">
+                                    <div class="col-md-5">Select sites:</div>
+                                    <div class="col-md-7">
+                                        <select name="sites[]" id="s2_1" style="width: 100%;" multiple="multiple" required>
+                                            <option value="">choose a site...</option>
+                                            <?php foreach ($override->getData('sites') as $site){?>
+                                                <option value="<?=$site['id']?>"><?=$site['name']?></option>
+                                            <?php }?>
+                                        </select>
                                     </div>
                                 </div>
 

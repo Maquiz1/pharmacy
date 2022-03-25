@@ -62,6 +62,8 @@ if($user->isLoggedIn()) {
                         break;
                 }
                 try {
+//                    $staffSites=$override->get('staff_sites', 'staff_id', Input::get('id'));
+//                    $staffStudy=$override->get('staff_study', 'staff_id', Input::get('id'));
                     $user->updateRecord('user', array(
                         'firstname' => Input::get('firstname'),
                         'lastname' => Input::get('lastname'),
@@ -69,8 +71,36 @@ if($user->isLoggedIn()) {
                         'phone_number' => Input::get('phone_number'),
                         'email_address' => Input::get('email_address'),
                         'accessLevel' => $accessLevel,
-                        'user_id'=>$user->data()->id,
                     ),Input::get('id'));
+
+//                    if($staffSites){
+//                        $currentSite=array();
+//                        foreach ($staffSites as $staffSite){
+//                            array_push($currentSite, $staffSite['site_id']);
+////                            $user->deleteRecord('staff_sites','id',$staffSite['id']);
+//                        }
+//                        $changeSites = array_diff($currentSite,Input::get('sites'));
+//                        if($changeSites){
+//                            foreach ($changeSites as $changeSite){
+//                                if(in_array($changeSite, $currentSite)){
+////                                    $user->deleteRecord('staff_sites','id',$changeSite);
+//                                    print_r($changeSite);echo ' To delete, ';
+//                                }else{
+////                                    $user->createRecord('staff_sites', array(
+////                                        'staff_id' => Input::get('id'),
+////                                        'site_id' => $changeSite,
+////                                    ));
+//                                    print_r('New Site ,');
+//                                }
+//                            }
+//                        }
+//                    }
+//                    foreach (Input::get('sites') as $site){
+//                        $user->createRecord('staff_sites', array(
+//                            'staff_id' => Input::get('id'),
+//                            'site_id' => $site,
+//                        ));
+//                    }
 
                     $successMessage = 'Account Updated Successful';
 
@@ -377,6 +407,28 @@ if($user->isLoggedIn()) {
                                                                     <div class="col-md-3">Last name:</div>
                                                                     <div class="col-md-9"><input type="text" name="lastname" value="<?=$staff['lastname']?>" required/></div>
                                                                 </div>
+<!--                                                                <div class="row-form clearfix">-->
+<!--                                                                    <div class="col-md-5">Select Study:</div>-->
+<!--                                                                    <div class="col-md-7">-->
+<!--                                                                        <select name="study[]" id="s2_2" style="width: 100%;" multiple="multiple" required>-->
+<!--                                                                            <option value="">choose a study...</option>-->
+<!--                                                                            --><?php //foreach ($override->getData('study') as $study){?>
+<!--                                                                                <option value="--><?//=$study['id']?><!--">--><?//=$study['name']?><!--</option>-->
+<!--                                                                            --><?php //}?>
+<!--                                                                        </select>-->
+<!--                                                                    </div>-->
+<!--                                                                </div>-->
+<!--                                                                <div class="row-form clearfix">-->
+<!--                                                                    <div class="col-md-5">Select sites:</div>-->
+<!--                                                                    <div class="col-md-7">-->
+<!--                                                                        <select name="sites[]" id="s2_1" style="width: 100%;" multiple="multiple" required>-->
+<!--                                                                            <option value="">choose a site...</option>-->
+<!--                                                                            --><?php //foreach ($override->getData('sites') as $site){?>
+<!--                                                                                <option value="--><?//=$site['id']?><!--">--><?//=$site['name']?><!--</option>-->
+<!--                                                                            --><?php //}?>
+<!--                                                                        </select>-->
+<!--                                                                    </div>-->
+<!--                                                                </div>-->
                                                                 <div class="row-form clearfix">
                                                                     <div class="col-md-3">Position</div>
                                                                     <div class="col-md-9">
