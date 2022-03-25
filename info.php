@@ -1179,6 +1179,204 @@ if($user->isLoggedIn()) {
                             </table>
                         </div>
                     </div>
+                <?php }elseif ($_GET['id'] == 6){?>
+                    <div class="col-md-12">
+                        <div class="head clearfix">
+                            <div class="isw-grid"></div>
+                            <h1>Assigned Stock</h1>
+                            <ul class="buttons">
+                                <li><a href="#" class="isw-download"></a></li>
+                                <li><a href="#" class="isw-attachment"></a></li>
+                                <li>
+                                    <a href="#" class="isw-settings"></a>
+                                    <ul class="dd-list">
+                                        <li><a href="#"><span class="isw-plus"></span> New document</a></li>
+                                        <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
+                                        <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="block-fluid">
+                            <table cellpadding="0" cellspacing="0" width="100%" class="table">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="checkall"/></th>
+                                    <th width="25%">Name</th>
+                                    <th width="25%">Study</th>
+                                    <th width="25%">Manufacturer</th>
+                                    <th width="10%">Amount</th>
+                                    <th width="25%">Manage</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($override->get('batch','status', 1) as $batch){
+                                    $study=$override->get('study','id', $batch['study_id'])[0]?>
+                                    <tr>
+                                        <td><input type="checkbox" name="checkbox"/></td>
+                                        <td> <a href="info.php?id=7&bt=<?=$batch['id']?>"><?=$batch['name']?></a></td>
+                                        <td><?=$study['name']?></td>
+                                        <td><?=$batch['manufacturer']?></td>
+                                        <td><?=$batch['amount']?></td>
+                                        <td>
+                                            <a href="info.php?id=7&bt=<?=$batch['id']?>" class="btn btn-default">View</a>
+                                        </td>
+
+                                    </tr>
+                                <?php }?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <?php }elseif ($_GET['id'] == 7){?>
+                    <div class="col-md-12">
+                        <div class="head clearfix">
+                            <div class="isw-grid"></div>
+                            <h1>Batch Description</h1>
+                            <ul class="buttons">
+                                <li><a href="#" class="isw-download"></a></li>
+                                <li><a href="#" class="isw-attachment"></a></li>
+                                <li>
+                                    <a href="#" class="isw-settings"></a>
+                                    <ul class="dd-list">
+                                        <li><a href="#"><span class="isw-plus"></span> New document</a></li>
+                                        <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
+                                        <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="block-fluid">
+                            <table cellpadding="0" cellspacing="0" width="100%" class="table">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="checkall"/></th>
+                                    <th width="35%">Product Name</th>
+                                    <th width="15%">Batch No</th>
+                                    <th width="10%">Drug Category</th>
+                                    <th width="10%">Quantity</th>
+                                    <th width="25%">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($override->get('batch_description', 'batch_id', $_GET['bt']) as $batchDesc){
+                                    $batch_no=$override->get('batch','id',$batchDesc['batch_id'])[0];
+                                    $dCat=$override->get('drug_cat','id',$batchDesc['cat_id'])[0]?>
+                                    <tr>
+                                        <td><input type="checkbox" name="checkbox"/></td>
+                                        <td><a href="info.php?id=8&dsc=<?=$batchDesc['id']?>"><?=$batchDesc['name']?></a></td>
+                                        <td><?=$batch_no['batch_no']?></td>
+                                        <td><?=$dCat['name']?></td>
+                                        <td> <?=$batchDesc['quantity']?></td>
+                                        <td>
+                                            <a href="info.php?id=8&dsc=<?=$batchDesc['id']?>" class="btn btn-info" >Details</a>
+                                        </td>
+                                    </tr>
+                                <?php }?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <?php }elseif ($_GET['id'] == 8){?>
+                    <div class="col-md-12">
+                        <div class="head clearfix">
+                            <div class="isw-grid"></div>
+                            <h1>Product Assignment</h1>
+                            <ul class="buttons">
+                                <li><a href="#" class="isw-download"></a></li>
+                                <li><a href="#" class="isw-attachment"></a></li>
+                                <li>
+                                    <a href="#" class="isw-settings"></a>
+                                    <ul class="dd-list">
+                                        <li><a href="#"><span class="isw-plus"></span> New document</a></li>
+                                        <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
+                                        <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="block-fluid">
+                            <table cellpadding="0" cellspacing="0" width="100%" class="table">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="checkall"/></th>
+                                    <th width="15%">Staff Name</th>
+                                    <th width="25%">Study</th>
+                                    <th width="25%">Drug</th>
+                                    <th width="10%">Quantity</th>
+                                    <th width="25%">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($override->get('assigned_stock', 'drug_id', $_GET['dsc']) as $batchDesc){
+                                    $study=$override->get('study','id', $batchDesc['study_id'])[0];
+                                    $staff=$override->get('user','id',$batchDesc['staff_id'])[0];
+                                    $drug=$override->get('batch_description','id',$_GET['dsc'])[0];
+                                    ?>
+                                    <tr>
+                                        <td><input type="checkbox" name="checkbox"/></td>
+                                        <td><a href="#"><?=$staff['firstname'].' '.$staff['lastname']?></a></td>
+                                        <td><?=$study['name']?></td>
+                                        <td><?=$drug['name']?></td>
+                                        <td> <?=$batchDesc['quantity']?></td>
+                                        <td>
+                                            <a href="info.php?id=9&dsc=<?=$_GET['dsc']?>" class="btn btn-default" >Assigned History</a>
+                                        </td>
+                                    </tr>
+                                <?php }?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <?php }elseif ($_GET['id'] == 9){?>
+                    <div class="col-md-12">
+                        <div class="head clearfix">
+                            <div class="isw-grid"></div>
+                            <h1>Product Assignment History</h1>
+                            <ul class="buttons">
+                                <li><a href="#" class="isw-download"></a></li>
+                                <li><a href="#" class="isw-attachment"></a></li>
+                                <li>
+                                    <a href="#" class="isw-settings"></a>
+                                    <ul class="dd-list">
+                                        <li><a href="#"><span class="isw-plus"></span> New document</a></li>
+                                        <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
+                                        <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="block-fluid">
+                            <table cellpadding="0" cellspacing="0" width="100%" class="table">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="checkall"/></th>
+                                    <th width="15%">Staff Name</th>
+                                    <th width="25%">Study</th>
+                                    <th width="25%">Drug</th>
+                                    <th width="10%">Quantity</th>
+                                    <th width="25%">Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($override->get('assigned_stock_rec', 'drug_id', $_GET['dsc']) as $batchDesc){
+                                    $study=$override->get('study','id', $batchDesc['study_id'])[0];
+                                    $staff=$override->get('user','id',$batchDesc['staff_id'])[0];
+                                    $drug=$override->get('batch_description','id',$_GET['dsc'])[0];
+                                    ?>
+                                    <tr>
+                                        <td><input type="checkbox" name="checkbox"/></td>
+                                        <td><a href="#"><?=$staff['firstname'].' '.$staff['lastname']?></a></td>
+                                        <td><?=$study['name']?></td>
+                                        <td><?=$drug['name']?></td>
+                                        <td> <?=$batchDesc['quantity']?></td>
+                                        <td><?=$batchDesc['create_on']?></td>
+                                    </tr>
+                                <?php }?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 <?php }?>
             </div>
 

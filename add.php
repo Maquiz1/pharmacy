@@ -348,6 +348,7 @@ if($user->isLoggedIn()) {
                         $user->createRecord('assigned_stock', array(
                             'batch_id' => Input::get('batch'),
                             'study_id' => Input::get('study'),
+                            'drug_id' => Input::get('drug'),
                             'staff_id' => Input::get('staff'),
                             'quantity' => Input::get('quantity'),
                             'notes' => Input::get('notes'),
@@ -358,6 +359,7 @@ if($user->isLoggedIn()) {
                     $user->createRecord('assigned_stock_rec', array(
                         'batch_id' => Input::get('batch'),
                         'study_id' => Input::get('study'),
+                        'drug_id' => Input::get('drug'),
                         'staff_id' => Input::get('staff'),
                         'quantity' => Input::get('quantity'),
                         'notes' => Input::get('notes'),
@@ -811,17 +813,20 @@ if($user->isLoggedIn()) {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row-form clearfix">
-                                    <div class="col-md-3">Staff</div>
-                                    <div id="ld_staff">
-                                        <span><img src="img/loaders/loader.gif" id="wait_ds1" title="loader.gif"/></span>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <select name="staff" style="width: 100%;" id="s2_1" required>
-                                            <option value="">Select</option>
-                                        </select>
+                                <div id="desc">
+                                    <div class="row-form clearfix">
+                                        <div class="col-md-3">Staff</div>
+                                        <div id="ld_staff">
+                                            <span><img src="img/loaders/loader.gif" id="wait_ds1" title="loader.gif"/></span>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <select name="staff" style="width: 100%;" id="s2_1" required>
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
+
 
                                 <div class="row-form clearfix">
                                     <div class="col-md-3">Quantity:</div>
@@ -905,7 +910,7 @@ if($user->isLoggedIn()) {
                 method:"GET",
                 data:{getUid:getUid},
                 success:function(data){
-                    $('#s2_1').html(data);
+                    $('#desc').html(data);
                     $('#ld_staff').hide();
                 }
             });
