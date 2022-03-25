@@ -276,6 +276,7 @@ if($user->isLoggedIn()) {
                 ),
             ));
             if ($validate->passed()) {
+                $descSum=0;$bSum=0;$dSum=0;
                 $descSum = $override->getSumD1('batch_description','quantity', 'batch_id', Input::get('batch'));
                 $bSum = $override->get('batch', 'id', Input::get('batch'))[0];
                 $dSum = $descSum[0]['SUM(quantity)'] + Input::get('quantity');
@@ -705,9 +706,9 @@ if($user->isLoggedIn()) {
         },'show');
     });
     <?php }?>
-    // if ( window.history.replaceState ) {
-    //     window.history.replaceState( null, null, window.location.href );
-    // }
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
     $(document).ready(function(){
         $('#fl_wait').hide();
         $('#wait_ds').hide();

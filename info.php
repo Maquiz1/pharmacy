@@ -243,18 +243,25 @@ if($user->isLoggedIn()) {
                 ),
             ));
             if ($validate->passed()) {
-                try {
-                    $user->updateRecord('batch_description', array(
-                        'batch_id' => Input::get('batch'),
-                        'name' => Input::get('name'),
-                        'cat_id' => Input::get('category'),
-                        'quantity' => Input::get('quantity'),
-                        'notify_amount' => Input::get('notify_amount'),
-                    ), Input::get('id'));
-                    $successMessage = 'Batch Description Successful Updated';
+                $descSum=0;$bSum=0;$dSum=0;
+                $descSum = $override->getSumD1('batch_description','quantity', 'batch_id', Input::get('batch'));
+                $bSum = $override->get('batch', 'id', Input::get('batch'))[0];
+                $dSum = $descSum[0]['SUM(quantity)'] + Input::get('quantity');
+                if($dSum <= $bSum['amount']){
+                    try {
+                        $user->updateRecord('batch_description', array(
+                            'name' => Input::get('name'),
+                            'cat_id' => Input::get('category'),
+                            'quantity' => Input::get('quantity'),
+                            'notify_amount' => Input::get('notify_amount'),
+                        ), Input::get('id'));
+                        $successMessage = 'Batch Description Successful Updated';
 
-                } catch (Exception $e) {
-                    die($e->getMessage());
+                    } catch (Exception $e) {
+                        die($e->getMessage());
+                    }
+                } else{
+                    $errorMessage = 'Exceeded Batch Amount, Please cross check and try again';
                 }
             } else {
                 $pageError = $validate->errors();
@@ -1045,12 +1052,7 @@ if($user->isLoggedIn()) {
                                                                 <div class="row-form clearfix">
                                                                     <div class="col-md-3">Batch</div>
                                                                     <div class="col-md-9">
-                                                                        <select name="batch" style="width: 100%;" required>
-                                                                            <option value="<?=$batchDesc['batch_id']?>"><?=$override->get('batch', 'id', $batchDesc['batch_id'])[0]['name']?></option>
-                                                                            <?php foreach ($override->get('batch','status', 1) as $batch){?>
-                                                                                <option value="<?=$batch['id']?>"><?=$batch['name'].' '.$batch['batch_no']?></option>
-                                                                            <?php }?>
-                                                                        </select>
+                                                                        <input value="<?=$override->get('batch', 'id', $batchDesc['batch_id'])[0]['name']?>" type="text" id="name" disabled/>
                                                                     </div>
                                                                 </div>
 
@@ -1091,6 +1093,7 @@ if($user->isLoggedIn()) {
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
+                                                        <input type="hidden" name="batch" value="<?=$batchDesc['batch_id']?>">
                                                         <input type="hidden" name="id" value="<?=$batchDesc['id']?>">
                                                         <input type="submit" name="edit_batch_desc" value="Save updates" class="btn btn-warning">
                                                         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
