@@ -342,13 +342,31 @@ if($user->isLoggedIn()) {
             if ($validate->passed()) {
                 try {
                     $checkData = $override->selectData('assigned_stock','staff_id',Input::get('staff'), 'batch_id', Input::get('batch'), 'study_id', Input::get('study'))[0];
-                    if($checkData){
-                        $user->updateRecord('assigned_stock', array(
-                            'quantity' => Input::get('quantity'),
-                            'status' => 1,
-                        ),$checkData['id']);
-                    }else{
-                        $user->createRecord('assigned_stock', array(
+                    $assignStock = $override->get('batch_description', 'id', Input::get('drug'))[0];
+                    $newAssigned = $assignStock['assigned'] + Input::get('quantity');
+                    if($newAssigned <= $assignStock['quantity']){
+                        if($checkData){
+                            $user->updateRecord('assigned_stock', array(
+                                'quantity' => Input::get('quantity'),
+                                'status' => 1,
+                            ),$checkData['id']);
+                            $user->updateRecord('batch_description', array('assigned' => $newAssigned),Input::get('drug'));
+                        }else{
+                            $user->createRecord('assigned_stock', array(
+                                'batch_id' => Input::get('batch'),
+                                'study_id' => Input::get('study'),
+                                'drug_id' => Input::get('drug'),
+                                'staff_id' => Input::get('staff'),
+                                'site_id' => Input::get('site'),
+                                'quantity' => Input::get('quantity'),
+                                'notes' => Input::get('notes'),
+                                'admin_id' => $user->data()->id,
+                                'status' => 1,
+                            ));
+
+                            $user->updateRecord('batch_description', array('assigned' => $newAssigned),Input::get('drug'));
+                        }
+                        $user->createRecord('assigned_stock_rec', array(
                             'batch_id' => Input::get('batch'),
                             'study_id' => Input::get('study'),
                             'drug_id' => Input::get('drug'),
@@ -356,22 +374,13 @@ if($user->isLoggedIn()) {
                             'site_id' => Input::get('site'),
                             'quantity' => Input::get('quantity'),
                             'notes' => Input::get('notes'),
+                            'create_on' => date('Y-m-d'),
                             'admin_id' => $user->data()->id,
-                            'status' => 1,
                         ));
+                        $successMessage = 'Stock Assigned Successful';
+                    }else{
+                        $errorMessage='Insufficient Amount on Stock';
                     }
-                    $user->createRecord('assigned_stock_rec', array(
-                        'batch_id' => Input::get('batch'),
-                        'study_id' => Input::get('study'),
-                        'drug_id' => Input::get('drug'),
-                        'staff_id' => Input::get('staff'),
-                        'site_id' => Input::get('site'),
-                        'quantity' => Input::get('quantity'),
-                        'notes' => Input::get('notes'),
-                        'create_on' => date('Y-m-d'),
-                        'admin_id' => $user->data()->id,
-                    ));
-                    $successMessage = 'Stock Assigned Successful';
 
                 } catch (Exception $e) {
                     die($e->getMessage());
