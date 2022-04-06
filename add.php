@@ -78,7 +78,7 @@ if($user->isLoggedIn()) {
                     foreach (Input::get('study') as $site){
                         $user->createRecord('staff_study', array(
                             'staff_id' => $staff_id['id'],
-                            'site_id' => $site,
+                            'study_id' => $site,
                         ));
                     }
 
@@ -827,7 +827,6 @@ if($user->isLoggedIn()) {
                                     </div>
                                 </div>
 
-
                                 <div class="row-form clearfix">
                                     <div class="col-md-3">Quantity:</div>
                                     <div class="col-md-9">
@@ -874,6 +873,7 @@ if($user->isLoggedIn()) {
         $('#wait_ds').hide();
         $('#ld_staff').hide();
         $('#ld_batch').hide();
+        $('#ld_stf').hide();
         $('#region').change(function(){
             var getUid = $(this).val();
             $('#wait_ds').show();
@@ -916,11 +916,6 @@ if($user->isLoggedIn()) {
             });
 
         });
-
-
-
-
-
 
 
         $('#wait_wd').hide();
