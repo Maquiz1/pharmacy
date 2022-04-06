@@ -1255,6 +1255,7 @@ if($user->isLoggedIn()) {
                                     <th width="15%">Batch No</th>
                                     <th width="10%">Drug Category</th>
                                     <th width="10%">Quantity</th>
+                                    <th width="10%">Assigned</th>
                                     <th width="25%">Action</th>
                                 </tr>
                                 </thead>
@@ -1268,6 +1269,7 @@ if($user->isLoggedIn()) {
                                         <td><?=$batch_no['batch_no']?></td>
                                         <td><?=$dCat['name']?></td>
                                         <td> <?=$batchDesc['quantity']?></td>
+                                        <td> <?=$batchDesc['assigned']?></td>
                                         <td>
                                             <a href="info.php?id=8&dsc=<?=$batchDesc['id']?>" class="btn btn-info" >Details</a>
                                         </td>

@@ -344,10 +344,11 @@ if($user->isLoggedIn()) {
                     $checkData = $override->selectData('assigned_stock','staff_id',Input::get('staff'), 'batch_id', Input::get('batch'), 'study_id', Input::get('study'))[0];
                     $assignStock = $override->get('batch_description', 'id', Input::get('drug'))[0];
                     $newAssigned = $assignStock['assigned'] + Input::get('quantity');
+                    $newQty = $checkData['quantity'] +  Input::get('quantity');
                     if($newAssigned <= $assignStock['quantity']){
                         if($checkData){
                             $user->updateRecord('assigned_stock', array(
-                                'quantity' => Input::get('quantity'),
+                                'quantity' => $newQty,
                                 'status' => 1,
                             ),$checkData['id']);
                             $user->updateRecord('batch_description', array('assigned' => $newAssigned),Input::get('drug'));
