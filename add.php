@@ -332,6 +332,9 @@ if($user->isLoggedIn()) {
                 'staff' => array(
                     'required' => true,
                 ),
+                'site' => array(
+                    'required' => true,
+                ),
                 'quantity' => array(
                     'required' => true,
                 ),
@@ -350,6 +353,7 @@ if($user->isLoggedIn()) {
                             'study_id' => Input::get('study'),
                             'drug_id' => Input::get('drug'),
                             'staff_id' => Input::get('staff'),
+                            'site_id' => Input::get('site'),
                             'quantity' => Input::get('quantity'),
                             'notes' => Input::get('notes'),
                             'admin_id' => $user->data()->id,
@@ -361,6 +365,7 @@ if($user->isLoggedIn()) {
                         'study_id' => Input::get('study'),
                         'drug_id' => Input::get('drug'),
                         'staff_id' => Input::get('staff'),
+                        'site_id' => Input::get('site'),
                         'quantity' => Input::get('quantity'),
                         'notes' => Input::get('notes'),
                         'create_on' => date('Y-m-d'),

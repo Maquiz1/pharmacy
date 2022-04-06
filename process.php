@@ -57,7 +57,7 @@ if($_GET['cnt'] == 'region'){
         <div class="col-md-3">Site</div>
         <div class="col-md-9">
             <select name="site" style="width: 100%;" required>
-                <option value="">Select</option>
+                <option value="">Select Site</option>
                 <?php foreach ($study_sites as $study_site){
                     $site=$override->get('sites', 'id', $study_site['site_id'])[0]?>
                     <option value="<?=$site['id']?>"><?=$site['name']?></option>
