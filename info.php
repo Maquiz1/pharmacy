@@ -306,7 +306,7 @@ if($user->isLoggedIn()) {
 <html lang="en">
 
 <head>
-    <title> Info - Pharmacy </title>
+    <title> Info | Pharmacy </title>
     <?php include "head.php";?>
 </head>
 <body>
