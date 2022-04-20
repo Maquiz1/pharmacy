@@ -1058,19 +1058,21 @@ if($user->isLoggedIn()) {
                                 <thead>
                                 <tr>
                                     <th><input type="checkbox" name="checkall"/></th>
-                                    <th width="25%">Product Name</th>
-                                    <th width="15%">Batch No</th>
+                                    <th width="20%">Product Name</th>
+                                    <th width="10%">Batch No</th>
                                     <th width="10%">Drug Category</th>
                                     <th width="10%">Quantity</th>
                                     <th width="10%">Assigned</th>
+                                    <th width="10%">Remained</th>
                                     <th width="15%">Status</th>
                                     <th width="25%">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($override->get('batch_description', 'batch_id', $_GET['bt']) as $batchDesc){
+                                <?php $amnt=0;foreach ($override->get('batch_description', 'batch_id', $_GET['bt']) as $batchDesc){
                                     $batch_no=$override->get('batch','id',$batchDesc['batch_id'])[0];
-                                    $dCat=$override->get('drug_cat','id',$batchDesc['cat_id'])[0]?>
+                                    $dCat=$override->get('drug_cat','id',$batchDesc['cat_id'])[0];
+                                    $amnt=$batchDesc['quantity'] - $batchDesc['assigned']?>
                                     <tr>
                                         <td><input type="checkbox" name="checkbox"/></td>
                                         <td> <?=$batchDesc['name']?></td>
@@ -1078,10 +1080,11 @@ if($user->isLoggedIn()) {
                                         <td><?=$dCat['name']?></td>
                                         <td> <?=$batchDesc['quantity']?></td>
                                         <td> <?=$batchDesc['assigned']?></td>
+                                        <td> <?=number_format($batchDesc['quantity'] - $batchDesc['assigned'])?></td>
                                         <td>
-                                            <?php if(($batchDesc['quantity'] - $batchDesc['assigned']) <= $batchDesc['notify_amount'] && $batchDesc['quantity'] > 0){?>
+                                            <?php if($amnt <= $batchDesc['notify_amount'] && $amnt > 0){?>
                                                 <a href="#" role="button" class="btn btn-warning" data-toggle="modal">Insufficient</a>
-                                            <?php }elseif($batchDesc['quantity'] <= 0){?>
+                                            <?php }elseif($amnt == 0){?>
                                                 <a href="#" role="button" class="btn btn-danger" data-toggle="modal">Finished</a>
                                             <?php }else{?>
                                                 <a href="#" role="button" class="btn btn-success" data-toggle="modal">Sufficient</a>
