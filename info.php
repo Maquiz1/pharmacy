@@ -737,8 +737,10 @@ if($user->isLoggedIn()) {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($override->get('batch','status', 1) as $batch){
-                                    $study=$override->get('study','id', $batch['study_id'])[0]?>
+                                <?php $amnt=0;foreach ($override->get('batch','status', 1) as $batch){
+                                    $study=$override->get('study','id', $batch['study_id'])[0];
+                                    $batchItems=$override->getSumD1('batch_description', 'assigned', 'batch_id', $batch['id']);print_r($batchItems[0]['SUM(assigned)']);
+                                    $amnt=$batch['amount'] - $batchItems[0]['SUM(assigned)'];?>
                                     <tr>
                                         <td><input type="checkbox" name="checkbox"/></td>
                                         <td> <a href="info.php?id=5&bt=<?=$batch['id']?>"><?=$batch['name']?></a></td>
@@ -748,9 +750,9 @@ if($user->isLoggedIn()) {
                                         <td><?=$batch['manufactured_date']?></td>
                                         <td><?=$batch['expire_date']?></td>
                                         <td>
-                                            <?php if($batch['amount'] <= $batch['notify_amount'] && $batch['amount'] > 0){?>
+                                            <?php if($amnt <= $batch['notify_amount'] && $amnt > 0){?>
                                                 <a href="#" role="button" class="btn btn-warning btn-sm">Running Low</a>
-                                            <?php }elseif ($batch['amount'] == 0){?>
+                                            <?php }elseif ($amnt == 0){?>
                                                 <a href="#" role="button" class="btn btn-danger">Out of Stock</a>
                                             <?php }else{?>
                                                 <a href="#" role="button" class="btn btn-success">Sufficient</a>
@@ -1060,6 +1062,7 @@ if($user->isLoggedIn()) {
                                     <th width="15%">Batch No</th>
                                     <th width="10%">Drug Category</th>
                                     <th width="10%">Quantity</th>
+                                    <th width="10%">Assigned</th>
                                     <th width="15%">Status</th>
                                     <th width="25%">Action</th>
                                 </tr>
@@ -1074,8 +1077,9 @@ if($user->isLoggedIn()) {
                                         <td><?=$batch_no['batch_no']?></td>
                                         <td><?=$dCat['name']?></td>
                                         <td> <?=$batchDesc['quantity']?></td>
+                                        <td> <?=$batchDesc['assigned']?></td>
                                         <td>
-                                            <?php if($batchDesc['quantity'] <= $batchDesc['notify_amount'] && $batchDesc['quantity'] > 0){?>
+                                            <?php if(($batchDesc['quantity'] - $batchDesc['assigned']) <= $batchDesc['notify_amount'] && $batchDesc['quantity'] > 0){?>
                                                 <a href="#" role="button" class="btn btn-warning" data-toggle="modal">Insufficient</a>
                                             <?php }elseif($batchDesc['quantity'] <= 0){?>
                                                 <a href="#" role="button" class="btn btn-danger" data-toggle="modal">Finished</a>
