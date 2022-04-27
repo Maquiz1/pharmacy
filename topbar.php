@@ -39,9 +39,9 @@ if (Input::exists('post')) {
 }
 ?>
 <div class="header">
-    <div class="row justify-content-center">
-        <h4 style="font-weight: bold;color: #f8f8f8" href="#"> &nbsp;Pharmacy Inventory</h4>
-    </div>
+    <!-- <div class="row justify-content-center"> -->
+        <h4 style="font-weight: bold;color: #f8f8f8" href="#" class="text-center"> &nbsp;Pharmacy Inventory</h4>
+    <!-- </div> -->
     <ul class="header_menu">
         <li class="list_icon"><a href="#">&nbsp;</a></li>
         <li class="settings_icon">
