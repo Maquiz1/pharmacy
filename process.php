@@ -22,7 +22,7 @@ if($_GET['cnt'] == 'region'){
     <?php foreach ($sts as $st){?>
         <option value="<?=$st['id']?>"><?=$st['name']?></option>
 <?php }}elseif ($_GET['cnt'] == 'a_study'){
-    $batches=$override->get('batch', 'id', $_GET['getUid']) ?>
+    $batches=$override->get('batch', 'study_id', $_GET['getUid']) ?>
     <option value="">Select Batch</option>
     <?php foreach ($batches as $batch){?>
         <option value="<?=$batch['id']?>"><?=$batch['name']?></option>

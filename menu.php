@@ -50,7 +50,7 @@ if($user->data()->accessLevel == 1){
                     </li>
                 </ul>
             </li>
-            <li class="openable">
+            <!-- <li class="openable">
                 <a href="#"><span class="isw-users"></span><span class="text">Clients</span></a>
                 <ul>
                     <li>
@@ -64,7 +64,7 @@ if($user->data()->accessLevel == 1){
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> -->
 
             <li class="openable">
                 <a href="#"><span class="isw-lock"></span><span class="text">Studies</span></a>
@@ -84,16 +84,16 @@ if($user->data()->accessLevel == 1){
             </li>
 
             <li class="openable">
-                <a href="#"><span class="isw-archive"></span><span class="text">Stock Batch</span></a>
+                <a href="#"><span class="isw-archive"></span><span class="text">Batch Details</span></a>
                 <ul>
                     <li>
                         <a href="add.php?id=4">
-                            <span class="glyphicon glyphicon-plus"></span><span class="text">Add Stock Batch</span>
+                            <span class="glyphicon glyphicon-plus"></span><span class="text">Add Batch</span>
                         </a>
                     </li>
                     <li>
                         <a href="add.php?id=7">
-                            <span class="glyphicon glyphicon-plus"></span><span class="text">Add Batch Description</span>
+                            <span class="glyphicon glyphicon-plus"></span><span class="text">Add Description</span>
                         </a>
                     </li>
                     <li>
