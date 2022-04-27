@@ -23,7 +23,7 @@ if ($user->isLoggedIn()) {
 <html lang="en">
 
 <head>
-    <title> Dashboard | Pharmacy </title>
+    <title> Dashboard | Pharmacy Inventory</title>
     <?php include "head.php"; ?>
 </head>
 
@@ -38,7 +38,7 @@ if ($user->isLoggedIn()) {
             <div class="breadLine">
 
                 <ul class="breadcrumb">
-                    <li><a href="#">Dashboard</a> <span class="divider">></span></li>
+                    <li><a href="#">Dashboard</a> <span class="divider"></span></li>
                 </ul>
                 <?php include 'pageInfo.php' ?>
             </div>
