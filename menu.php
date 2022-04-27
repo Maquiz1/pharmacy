@@ -104,11 +104,11 @@ if($user->data()->accessLevel == 1){
                 </ul>
             </li>
             <li class="openable">
-                <a href="#"><span class="isw-folder"></span><span class="text">Assign Stock</span></a>
+                <a href="#"><span class="isw-folder"></span><span class="text">Dispense Drugs</span></a>
                 <ul>
                     <li>
                         <a href="add.php?id=8">
-                            <span class="glyphicon glyphicon-plus"></span><span class="text">Assign Stock</span>
+                            <span class="glyphicon glyphicon-plus"></span><span class="text">dispense</span>
                         </a>
                     </li>
                     <li>

@@ -802,7 +802,7 @@ if($user->isLoggedIn()) {
                     <div class="col-md-offset-1 col-md-8">
                         <div class="head clearfix">
                             <div class="isw-ok"></div>
-                            <h1>Assign Stock</h1>
+                            <h1>Dispense Drugs</h1>
                         </div>
                         <div class="block-fluid">
                             <form id="validation" method="post" >

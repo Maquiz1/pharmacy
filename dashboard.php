@@ -189,11 +189,12 @@ if ($user->isLoggedIn()) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $amnt = 0;
+                                    <?php
+                                    $amnt = 0;
                                     foreach ($override->get('batch', 'status', 1) as $batch) {
                                         $study = $override->get('study', 'id', $batch['study_id'])[0];
                                         $batchItems = $override->getSumD1('batch_description', 'assigned', 'batch_id', $batch['id']);
-                                        print_r($batchItems[0]['SUM(assigned)']);
+                                        // print_r($batchItems[0]['SUM(assigned)']);
                                         $amnt = $batch['amount'] - $batchItems[0]['SUM(assigned)']; ?>
                                         <tr>
                                             <td><input type="checkbox" name="checkbox" /></td>
