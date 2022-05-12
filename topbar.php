@@ -1,6 +1,6 @@
 <?php
-if(Input::exists('post')){
-    if(Input::get('change_password')){
+if (Input::exists('post')) {
+    if (Input::get('change_password')) {
         $validate = new validate();
         $validate = $validate->check($_POST, array(
             'new_password' => array(
@@ -17,21 +17,21 @@ if(Input::exists('post')){
         ));
         if ($validate->passed()) {
             $salt = $random->get_rand_alphanumeric(32);
-            if(Hash::make(Input::get('current_password'), $user->data()->salt) !== $user->data()->password){
+            if (Hash::make(Input::get('current_password'), $user->data()->salt) !== $user->data()->password) {
                 $errorMessage = 'Your current password is wrong';
-            }else{
+            } else {
                 try {
-                    $user->updateRecord('user',array(
+                    $user->updateRecord('user', array(
                         'password' => Hash::make(Input::get('new_password'), $salt),
                         'salt' => $salt,
                         'pswd' => 1
-                    ),$user->data()->id);
+                    ), $user->data()->id);
                 } catch (Exception $e) {
                     $e->getMessage();
                 }
             }
             $successMessage = 'Password changed successfully';
-            header('Location: '.$_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
         } else {
             $pageError = $validate->errors();
         }
@@ -39,7 +39,9 @@ if(Input::exists('post')){
 }
 ?>
 <div class="header">
-    <h4 style="font-weight: bold;color: #f8f8f8" href="#"> &nbsp;Pharmacy </h4>
+    <!-- <div class="row justify-content-center"> -->
+        <h4 style="font-weight: bold;color: #f8f8f8" href="#" class="text-center"> &nbsp;Pharmacy Inventory</h4>
+    <!-- </div> -->
     <ul class="header_menu">
         <li class="list_icon"><a href="#">&nbsp;</a></li>
         <li class="settings_icon">
@@ -87,13 +89,13 @@ if(Input::exists('post')){
                     <div class="row">
                         <div class="col-md-3"><strong>Fixed layout:</strong></div>
                         <div class="col-md-9">
-                            <input type="checkbox" name="settings_fixed" value="1"/>
+                            <input type="checkbox" name="settings_fixed" value="1" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3"><strong>Hide menu:</strong></div>
                         <div class="col-md-9">
-                            <input type="checkbox" name="settings_menu" value="1"/>
+                            <input type="checkbox" name="settings_menu" value="1" />
                         </div>
                     </div>
                 </div>
@@ -108,22 +110,26 @@ if(Input::exists('post')){
 <div class="modal" id="change_password_n" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form method="post">
-            <?php if(Input::get('change_password')){if($errorMessage){?>
-                <div class="alert alert-danger">
-                    <h4>Error!</h4>
-                    <?=$errorMessage?>
-                </div>
-            <?php }elseif($pageError){?>
-                <div class="alert alert-danger">
-                    <h4>Error!</h4>
-                    <?php foreach($pageError as $error){echo $error.' , ';}?>
-                </div>
-            <?php }elseif($successMessage){?>
-                <div class="alert alert-success">
-                    <h4>Success!</h4>
-                    <?=$successMessage?>
-                </div>
-            <?php }}?>
+            <?php if (Input::get('change_password')) {
+                if ($errorMessage) { ?>
+                    <div class="alert alert-danger">
+                        <h4>Error!</h4>
+                        <?= $errorMessage ?>
+                    </div>
+                <?php } elseif ($pageError) { ?>
+                    <div class="alert alert-danger">
+                        <h4>Error!</h4>
+                        <?php foreach ($pageError as $error) {
+                            echo $error . ' , ';
+                        } ?>
+                    </div>
+                <?php } elseif ($successMessage) { ?>
+                    <div class="alert alert-success">
+                        <h4>Success!</h4>
+                        <?= $successMessage ?>
+                    </div>
+            <?php }
+            } ?>
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 style="color: orangered;font-weight: bold">You have Login for the fist time please change your password</h4>
@@ -134,19 +140,19 @@ if(Input::exists('post')){
                             <div class="row-form clearfix">
                                 <div class="col-md-3">Current Password:</div>
                                 <div class="col-md-9">
-                                    <input value="" class="validate[required]" type="password" name="current_password" id="pass1"/>
+                                    <input value="" class="validate[required]" type="password" name="current_password" id="pass1" />
                                 </div>
                             </div>
                             <div class="row-form clearfix">
                                 <div class="col-md-3">New Password:</div>
                                 <div class="col-md-9">
-                                    <input value="" class="validate[required]" type="password" name="new_password" id="pass2"/>
+                                    <input value="" class="validate[required]" type="password" name="new_password" id="pass2" />
                                 </div>
                             </div>
                             <div class="row-form clearfix">
                                 <div class="col-md-3">Re-type Password:</div>
                                 <div class="col-md-9">
-                                    <input value="" class="validate[required]" type="password" name="retype_password" id="pass3"/>
+                                    <input value="" class="validate[required]" type="password" name="retype_password" id="pass3" />
                                 </div>
                             </div>
                         </div>
