@@ -226,6 +226,7 @@ if($user->isLoggedIn()) {
                         'create_on' => date('Y-m-d'),
                         'details' => Input::get('details'),
                         'status' => 1,
+                        'dsc_status' => 0,
                         'staff_id'=>$user->data()->id
                     ));
 
@@ -272,50 +273,6 @@ if($user->isLoggedIn()) {
 
                 } catch (Exception $e) {
                     die($e->getMessage());
-                }
-            } else {
-                $pageError = $validate->errors();
-            }
-        }
-        elseif (Input::get('add_batch_desc')) {
-            $validate = $validate->check($_POST, array(
-                'batch' => array(
-                    'required' => true,
-                ),
-                'name' => array(
-                    'required' => true,
-                ),
-                'category' => array(
-                    'required' => true,
-                ),
-                'quantity' => array(
-                    'required' => true,
-                ),
-            ));
-            if ($validate->passed()) {
-                $descSum=0;$bSum=0;$dSum=0;
-                $descSum = $override->getSumD1('batch_description','quantity', 'batch_id', Input::get('batch'));
-                $bSum = $override->get('batch', 'id', Input::get('batch'))[0];
-                $dSum = $descSum[0]['SUM(quantity)'] + Input::get('quantity');
-                if($dSum <= $bSum['amount']){
-                    try {
-                        $user->createRecord('batch_description', array(
-                            'batch_id' => Input::get('batch'),
-                            'name' => Input::get('name'),
-                            'cat_id' => Input::get('category'),
-                            'quantity' => Input::get('quantity'),
-                            'notify_amount' => Input::get('notify_amount'),
-                            'create_on' => date('Y-m-d'),
-                            'staff_id' => $user->data()->id,
-                            'status' => 1,
-                        ));
-                        $successMessage = 'Batch Description Successful Added';
-
-                    } catch (Exception $e) {
-                        die($e->getMessage());
-                    }
-                } else{
-                    $errorMessage = 'Exceeded Batch Amount, Please cross check and try again';
                 }
             } else {
                 $pageError = $validate->errors();
