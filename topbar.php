@@ -243,9 +243,6 @@ if (Input::exists('post')) {
                                     <?php $batchs=$override->lastRow2('batch','dsc_status', 0, 'id')?>
                                     <select name="batch" style="width: 100%;" required>
                                         <option value="<?=$batchs[0]['id']?>"><?=$batchs[0]['name'].' '.$batchs[0]['batch_no']?></option>
-                                        <?php foreach ($batchs as $batch){?>
-                                            <option value="<?=$batch['id']?>"><?=$batch['name'].' '.$batch['batch_no']?></option>
-                                        <?php }?>
                                     </select>
                                 </div>
                             </div>
