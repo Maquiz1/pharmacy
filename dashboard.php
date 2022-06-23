@@ -11,7 +11,7 @@ $errorMessage = null;
 $noE = 0;
 $noC = 0;
 $noD = 0;
-$numRec=2;
+$numRec = 10;
 $users = $override->getData('user');
 if ($user->isLoggedIn()) {
     if (Input::exists('post')) {
@@ -51,13 +51,15 @@ if ($user->isLoggedIn()) {
                     <div class="col-md-3">
 
                         <div class="wBlock red clearfix">
-                            <div class="dSpace">
-                                <h3>Studies</h3>
-                                <span class="mChartBar" sparkType="bar" sparkBarColor="white">
-                                    <!--130,190,260,230,290,400,340,360,390-->
-                                </span>
-                                <span class="number"><?= $override->getNo('study') ?></span>
-                            </div>
+                            <a href="info.php?id=11">
+                                <div class="dSpace">
+                                    <h3>Use Cases</h3>
+                                    <span class="mChartBar" sparkType="bar" sparkBarColor="white">
+                                        <!--130,190,260,230,290,400,340,360,390-->
+                                    </span>
+                                    <span class="number"><?= $override->getNo('use_case') ?></span>
+                                </div>
+                            </a>
                         </div>
 
                     </div>
@@ -65,13 +67,15 @@ if ($user->isLoggedIn()) {
                     <div class="col-md-3">
 
                         <div class="wBlock green clearfix">
-                            <div class="dSpace">
-                                <h3>Staff</h3>
-                                <span class="mChartBar" sparkType="bar" sparkBarColor="white">
-                                    <!--5,10,15,20,23,21,25,20,15,10,25,20,10-->
-                                </span>
-                                <span class="number"><?= $override->getNo('user') ?></span>
-                            </div>
+                            <a href="info.php?id=14">
+                                <div class="dSpace">
+                                    <h3>Location</h3>
+                                    <span class="mChartBar" sparkType="bar" sparkBarColor="white">
+                                        <!--5,10,15,20,23,21,25,20,15,10,25,20,10-->
+                                    </span>
+                                    <span class="number"><?= $override->getNo('location') ?></span>
+                                </div>
+                            </a>
                         </div>
 
                     </div>
@@ -192,9 +196,14 @@ if ($user->isLoggedIn()) {
                                 <tbody>
                                     <?php
                                     $amnt = 0;
-                                    $pagNum=$override->getCount('batch','status',1);
-                                    $pages = ceil($pagNum / $numRec);if(!$_GET['page'] || $_GET['page'] == 1){$page = 0;}else{$page = ($_GET['page']*$numRec)-$numRec;}
-                                    foreach ($override->getWithLimit('batch', 'status', 1,$page,$numRec) as $batch) {
+                                    $pagNum = $override->getCount('batch', 'status', 1);
+                                    $pages = ceil($pagNum / $numRec);
+                                    if (!$_GET['page'] || $_GET['page'] == 1) {
+                                        $page = 0;
+                                    } else {
+                                        $page = ($_GET['page'] * $numRec) - $numRec;
+                                    }
+                                    foreach ($override->getWithLimit('batch', 'status', 1, $page, $numRec) as $batch) {
                                         $study = $override->get('study', 'id', $batch['study_id'])[0];
                                         $batchItems = $override->getSumD1('batch_description', 'assigned', 'batch_id', $batch['id']);
                                         // print_r($batchItems[0]['SUM(assigned)']);
@@ -338,11 +347,22 @@ if ($user->isLoggedIn()) {
                 </div>
                 <div class="pull-right">
                     <div class="btn-group">
-                        <a href="dashboard.php?page=<?php if(($_GET['page']-1) > 0){echo $_GET['page']-1;}else{echo 1;}?>" class="btn btn-default"> < </a>
-                        <?php for($i=1;$i<=$pages;$i++){?>
-                            <a href="dashboard.php?page=<?=$_GET['id']?>&page=<?=$i?>" class="btn btn-default <?php if($i == $_GET['page']){echo 'active';}?>"><?=$i?></a>
-                        <?php } ?>
-                        <a href="dashboard.php?page=<?php if(($_GET['page']+1) <= $pages){echo $_GET['page']+1;}else{echo $i-1;}?>" class="btn btn-default"> > </a>
+                        <a href="dashboard.php?page=<?php if (($_GET['page'] - 1) > 0) {
+                                                        echo $_GET['page'] - 1;
+                                                    } else {
+                                                        echo 1;
+                                                    } ?>" class="btn btn-default">
+                            < </a>
+                                <?php for ($i = 1; $i <= $pages; $i++) { ?>
+                                    <a href="dashboard.php?page=<?= $_GET['id'] ?>&page=<?= $i ?>" class="btn btn-default <?php if ($i == $_GET['page']) {
+                                                                                                                                echo 'active';
+                                                                                                                            } ?>"><?= $i ?></a>
+                                <?php } ?>
+                                <a href="dashboard.php?page=<?php if (($_GET['page'] + 1) <= $pages) {
+                                                                echo $_GET['page'] + 1;
+                                                            } else {
+                                                                echo $i - 1;
+                                                            } ?>" class="btn btn-default"> > </a>
                     </div>
                 </div>
                 <div class="row">

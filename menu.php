@@ -132,6 +132,15 @@ if($user->data()->accessLevel == 1){
                         <a href="add.php?id=6">
                             <span class="glyphicon glyphicon-home"></span><span class="text">Add Drug Category</span>
                         </a>
+                        <a href="add.php?id=9">
+                            <span class="glyphicon glyphicon-home"></span><span class="text">Add Groups</span>
+                        </a>
+                        <a href="add.php?id=10">
+                            <span class="glyphicon glyphicon-home"></span><span class="text">Add Use Case</span>
+                        </a>
+                        <a href="add.php?id=11">
+                            <span class="glyphicon glyphicon-home"></span><span class="text">Add Group Location</span>
+                        </a>
                     </li>
                     <li>
                         <a href="info.php?id=2">

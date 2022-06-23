@@ -1,7 +1,8 @@
 <?php
 if (Input::exists('post')) {
+    $validate = new validate();
     if (Input::get('change_password')) {
-        $validate = new validate();
+        // $validate = new validate();
         $validate = $validate->check($_POST, array(
             'new_password' => array(
                 'required' => true,
@@ -50,6 +51,18 @@ if (Input::exists('post')) {
             'quantity' => array(
                 'required' => true,
             ),
+            'use_group' => array(
+                'required' => true,
+            ),
+            'use_case' => array(
+                'required' => true,
+            ),
+            'location' => array(
+                'required' => true,
+            ),
+            'stock_guide' => array(
+                'required' => true,
+            ),
         ));
         if ($validate->passed()) {
             $descSum=0;$bSum=0;$dSum=0;
@@ -67,6 +80,10 @@ if (Input::exists('post')) {
                         'create_on' => date('Y-m-d'),
                         'staff_id' => $user->data()->id,
                         'status' => 1,
+                        'use_group' => Input::get('use_group'),
+                        'use_case' => Input::get('use_case'),
+                        'location' => Input::get('location'),
+                        'stock_guide' => Input::get('stock_guide'),
                     ));
                     $user->updateRecord('batch', array('dsc_status' => 1),Input::get('batch'));
                     $successMessage = 'Batch Description Successful Added';
@@ -263,6 +280,49 @@ if (Input::exists('post')) {
                                             <option value="<?=$dCat['id']?>"><?=$dCat['name']?></option>
                                         <?php }?>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="row-form clearfix">
+                                <div class="col-md-3">Groups</div>
+                                <div class="col-md-9">
+                                    <select name="use_group" style="width: 100%;" required>
+                                        <option value="">Select Group</option>
+                                        <?php foreach ($override->getData('use_group') as $dCat){?>
+                                            <option value="<?=$dCat['id']?>"><?=$dCat['name']?></option>
+                                        <?php }?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row-form clearfix">
+                                <div class="col-md-3">Use Case</div>
+                                <div class="col-md-9">
+                                    <select name="use_case" style="width: 100%;" required>
+                                        <option value="">Select Use Case</option>
+                                        <?php foreach ($override->getData('use_case') as $dCat){?>
+                                            <option value="<?=$dCat['id']?>"><?=$dCat['name']?></option>
+                                        <?php }?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row-form clearfix">
+                                <div class="col-md-3">Use Case Location</div>
+                                <div class="col-md-9">
+                                    <select name="location" style="width: 100%;" required>
+                                        <option value="">Select Use Case Location</option>
+                                        <?php foreach ($override->getData('location') as $dCat){?>
+                                            <option value="<?=$dCat['id']?>"><?=$dCat['name']?></option>
+                                        <?php }?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row-form clearfix">
+                                <div class="col-md-3">Stoke Guide:</div>
+                                <div class="col-md-9">
+                                    <input value="" class="validate[required]" type="number" name="stock_guide" id="stock_guide"/>
                                 </div>
                             </div>
 
