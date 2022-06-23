@@ -1833,18 +1833,19 @@ if ($user->isLoggedIn()) {
                                     <tbody>
                                         <?php $amnt = 0;
                                         foreach ($override->getData('use_case') as $batchDesc) {
-                                            $available_quantity = $override->get('batch_description', 'status', 1);
+                                            $available_quantity = $override->getSumD1('batch_description', 'quantity','use_case', $batchDesc['id']);
+                                            // print_r($available_quantity);
                                             $batch_no = $override->get('batch', 'id', $batchDesc['batch_id'])[0];
                                             $dCat = $override->get('drug_cat', 'id', $batchDesc['cat_id'])[0];
                                             $amnt = $batchDesc['quantity'] - $batchDesc['assigned'];
                                             $use_case = $override->get('use_case', 'id', $batchDesc['use_case'])[0];
                                         ?>
                                             <tr>
-                                                <td> <?= $batchDesc['name'] ?></td>
-                                                <td> <?= $batchDesc['quantity'] ?></td>
+                                                <td> <?=$batchDesc['name'] ?></td>
+                                                <td> <?php if($available_quantity[0]['SUM(quantity)']){echo $available_quantity[0]['SUM(quantity)'];}else{echo 0;} ?></td>
                                                 <td>
-                                                    <a href="#viw_use_case_id<?= $batchDesc['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">View</a>
-                                                    <a href="#edit_use_case_id<?= $batchDesc['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">Edit</a>
+                                                    <a href="info.php?id=12&did=<?=$batchDesc['id']?>" class="btn btn-info">View</a>
+                                                    <a href="#edit_use_case_id<?=$batchDesc['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">Edit</a>
                                                     <a href="#delete<?= $batchDesc['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
                                                 </td>
 
@@ -1967,7 +1968,7 @@ if ($user->isLoggedIn()) {
                                             <th width="10%">Batch No</th>
                                             <th width="10%">Drug Category</th>
                                             <th width="10%">Quantity</th>
-                                            <th width="10%">Use Case</th>
+                                            <th width="10%">location</th>
                                             <th width="10%">Assigned</th>
                                             <th width="10%">Remained</th>
                                             <th width="15%">Status</th>
@@ -1976,22 +1977,21 @@ if ($user->isLoggedIn()) {
                                     </thead>
                                     <tbody>
                                         <?php $amnt = 0;
-                                        foreach ($override->get('batch_description', 'status', 1) as $batchDesc) {
+                                        foreach ($override->getNews('batch_description', 'status', 1,'use_case', $_GET['did']) as $batchDesc) {
                                             $batch_no = $override->get('batch', 'id', $batchDesc['batch_id'])[0];
                                             $dCat = $override->get('drug_cat', 'id', $batchDesc['cat_id'])[0];
                                             $amnt = $batchDesc['quantity'] - $batchDesc['assigned'];
-                                            $use_case = $override->get('use_case', 'id', $batchDesc['use_case']);
-                                            // var_dump($use_case);
+                                            $location = $override->get('location', 'id', $batchDesc['location'])[0];
                                         ?>
                                             <tr>
                                                 <td><input type="checkbox" name="checkbox" /></td>
-                                                <td> <?= $batchDesc['name'] ?></td>
-                                                <td><?= $batch_no['batch_no'] ?></td>
-                                                <td><?= $dCat['name'] ?></td>
-                                                <td> <?= $batchDesc['quantity'] ?></td>
-                                                <td> <?= $use_case ?></td>
-                                                <td> <?= $batchDesc['assigned'] ?></td>
-                                                <td> <?= number_format($batchDesc['quantity'] - $batchDesc['assigned']) ?></td>
+                                                <td> <?=$batchDesc['name'] ?></td>
+                                                <td><?=$batch_no['batch_no'] ?></td>
+                                                <td><?=$dCat['name'] ?></td>
+                                                <td> <?=$batchDesc['quantity'] ?></td>
+                                                <td> <?=$location['name'] ?></td>
+                                                <td> <?=$batchDesc['assigned'] ?></td>
+                                                <td> <?=number_format($batchDesc['quantity'] - $batchDesc['assigned']) ?></td>
                                                 <td>
                                                     <?php if ($amnt <= $batchDesc['notify_amount'] && $amnt > 0) { ?>
                                                         <a href="#" role="button" class="btn btn-warning" data-toggle="modal">Insufficient</a>
