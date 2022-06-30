@@ -102,7 +102,7 @@ if (Input::exists('post')) {
 ?>
 <div class="header">
     <!-- <div class="row justify-content-center"> -->
-        <h4 style="font-weight: bold;color: #f8f8f8" href="#" class="text-center"> &nbsp;Pharmacy Inventory</h4>
+        <h4 style="font-weight: bold;color: #f8f8f8" href="#" class="text-center"> &nbsp;Kingani - Inventory</h4>
     <!-- </div> -->
     <ul class="header_menu">
         <li class="list_icon"><a href="#">&nbsp;</a></li>
@@ -352,11 +352,11 @@ if (Input::exists('post')) {
 </div>
 <script>
     <?php if($override->lastRow2('batch','dsc_status', 0, 'id')){?>
-    $(window).on('load',function(){
-        $("#batch_desc").modal({
-            backdrop: 'static',
-            keyboard: false
-        },'show');
-    });
+    // $(window).on('load',function(){
+    //     $("#batch_desc").modal({
+    //         backdrop: 'static',
+    //         keyboard: false
+    //     },'show');
+    // });
     <?php }?>
 </script>

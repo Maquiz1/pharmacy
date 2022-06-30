@@ -324,4 +324,8 @@ class User {
             }
         }
     }
+
+    public function last_id(){
+        // return (!empty($this->_data)) ? true : false;
+    }
 }
