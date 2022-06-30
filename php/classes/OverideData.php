@@ -27,20 +27,26 @@ class OverideData{
         return $num;
     }
 
-    public function getCount1($table,$field,$value){
-        $query = $this->_pdo->query("SELECT * FROM $table WHERE $field <= '$value'");
+    public function getCount1($table,$field,$value,$where2,$id2){
+        $query = $this->_pdo->query("SELECT * FROM $table WHERE $field <= '$value' AND $where2 = '$id2'");
         $num = $query->rowCount();
         return $num;
     }
 
-    public function getCount2($table,$field,$value){
-        $query = $this->_pdo->query("SELECT * FROM $table WHERE $field <= '$value'");
+    public function getCount2($table,$field,$value,$where2,$id2){
+        $query = $this->_pdo->query("SELECT * FROM $table WHERE $field <= '$value' AND $where2 = '$id2'");
         $num = $query->rowCount();
         return $num;
     }
 
-    public function getCount3($table){
-        $query = $this->_pdo->query("SELECT * FROM $table WHERE notify_amount >= quantity");
+    public function getCount3($table,$where2,$id2){
+        $query = $this->_pdo->query("SELECT * FROM $table WHERE notify_amount >= quantity AND $where2 = '$id2'");
+        $num = $query->rowCount();
+        return $num;
+    }
+
+    public function getCount4($table,$where2,$id2){
+        $query = $this->_pdo->query("SELECT * FROM $table WHERE notify_amount >= quantity AND $where2 = '$id2'");
         $num = $query->rowCount();
         return $num;
     }
@@ -89,20 +95,20 @@ class OverideData{
         return $result;
     }
 
-    public function get4($table){
-        $query = $this->_pdo->query("SELECT * FROM $table WHERE notify_amount >= quantity");
+    public function get4($table,$where2,$id2){
+        $query = $this->_pdo->query("SELECT * FROM $table WHERE notify_amount >= quantity AND $where2 = '$id2'");
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
 
-    public function getLessThanDate($table,$where,$id){
-        $query = $this->_pdo->query("SELECT * FROM $table WHERE $where <= '$id'");
+    public function getLessThanDate($table,$where,$id,$where2,$id2){
+        $query = $this->_pdo->query("SELECT * FROM $table WHERE $where <= '$id' AND $where2 = '$id2'");
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
 
-    public function getLessThanDate30($table,$where,$id){
-        $query = $this->_pdo->query("SELECT * FROM $table WHERE $where <= '$id'");
+    public function getLessThanDate30($table,$where,$id,$where2,$id2){
+        $query = $this->_pdo->query("SELECT * FROM $table WHERE $where <= '$id' AND $where2 = '$id2'");
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }

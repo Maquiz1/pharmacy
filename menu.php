@@ -154,26 +154,9 @@ if ($user->data()->accessLevel == 1) {
                 <a href="#"><span class="isw-tag"></span><span class="text">Reports</span></a>
                 <ul>
                     <li>
-                        <a href="info.php?id=15">
-                            <span class="glyphicon glyphicon-user"></span><span class="text">View All Available Devices</span>
-                        </a>
-                        <a href="info.php?id=16">
-                            <span class="glyphicon glyphicon-home"></span><span class="text">View All Available Medicine</span>
-                        </a>
-                        <a href="info.php?id=17">
-                            <span class="glyphicon glyphicon-home"></span><span class="text">View All Runing Low Devices</span>
-                        </a>
-                        <a href="info.php?id=18">
-                            <span class="glyphicon glyphicon-home"></span><span class="text">View All Running Medicne</span>
-                        </a>
-                        <a href="info.php?id=19">
-                            <span class="glyphicon glyphicon-home"></span><span class="text">View All Finished Devices</span>
-                        </a>
-                        <a href="info.php?id=20">
-                            <span class="glyphicon glyphicon-home"></span><span class="text">View All Finished Medicine</span>
-                        </a>
-                        <a href="info.php?id=21">
-                            <span class="glyphicon glyphicon-user"></span><span class="text">View Al Medicine About to Expire Soon</span>
+                        <a href="data.php?id=9">
+                            <span class="text">Archive Devices / Medicine</span> <span class="badge badge-primary badge-pill"><?= $override->getCount('batch','status',4) ?></span>
+
                         </a>
                     </li>
                     <li>

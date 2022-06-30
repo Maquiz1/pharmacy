@@ -101,7 +101,7 @@ if ($user->isLoggedIn()) {
                                         <!--240,234,150,290,310,240,210,400,320,198,250,222,111,240,221,340,250,190-->
                                     </span>
                                     <span class="number">
-                                        <span class="number"><?= $override->getCount1('batch', 'status', 1) ?></span>
+                                        <span class="number"><?= $override->getCount('batch', 'status', 1) ?></span>
                                 </div>
                             </a>
                         </div>
@@ -117,7 +117,7 @@ if ($user->isLoggedIn()) {
                                         <!--240,234,150,290,310,240,210,400,320,198,250,222,111,240,221,340,250,190-->
                                     </span>
                                     <span class="number">
-                                        <span class="number"><?= $override->getCount2('batch', 'expire_date', $todayPlus30) ?></span>
+                                        <span class="number"><?= $override->getCount2('batch', 'expire_date', $todayPlus30,'status',1) ?></span>
                                 </div>
                             </a>
                         </div>
@@ -131,7 +131,7 @@ if ($user->isLoggedIn()) {
                                     <span class="mChartBar" sparkType="bar" sparkBarColor="white">
                                         <!--5,10,15,20,23,21,25,20,15,10,25,20,10-->
                                     </span>
-                                    <span class="number"><?= $override->getCount2('batch', 'expire_date', $todayPlus30) ?></span>
+                                    <span class="number"><?= $override->getCount2('batch_description', 'next_check_date', $todayPlus30,'status',1) ?></span>
                                 </div>
                             </a>
                         </div>
@@ -146,7 +146,7 @@ if ($user->isLoggedIn()) {
                                     <span class="mChartBar" sparkType="bar" sparkBarColor="white">
                                         <!--240,234,150,290,310,240,210,400,320,198,250,222,111,240,221,340,250,190-->
                                     </span>
-                                    <span class="number"><?= $override->getCount1('batch', 'expire_date', $today) ?></span>
+                                    <span class="number"><?= $override->getCount1('batch', 'expire_date', $today,'status',1) ?></span>
                                 </div>
                             </div>
                         </a>
@@ -160,7 +160,7 @@ if ($user->isLoggedIn()) {
                                     <span class="mChartBar" sparkType="bar" sparkBarColor="white">
                                         <!--240,234,150,290,310,240,210,400,320,198,250,222,111,240,221,340,250,190-->
                                     </span>
-                                    <span class="number"><?= $override->getCount3('batch_description') ?></span>
+                                    <span class="number"><?= $override->getCount3('batch_description','status',1) ?></span>
                                 </div>
                             </div>
                         </a>
@@ -174,7 +174,7 @@ if ($user->isLoggedIn()) {
                                     <span class="mChartBar" sparkType="bar" sparkBarColor="white">
                                         <!--130,190,260,230,290,400,340,360,390-->
                                     </span>
-                                    <span class="number"><?= $override->getCount1('batch', 'expire_date', $today) ?></span>
+                                    <span class="number"><?= $override->getCount1('batch', 'expire_date', $today,'status',1) ?></span>
                                 </div>
                             </a>
                         </div>
@@ -261,7 +261,7 @@ if ($user->isLoggedIn()) {
                                         $page = ($_GET['page'] * $numRec) - $numRec;
                                     }
 
-                                    foreach ($override->getData('batch_description') as $bDiscription) {
+                                    foreach ($override->get('batch_description','status',1) as $bDiscription) {
                                         $useGroup = $override->get('use_group', 'id', $bDiscription['use_group'])[0]['name'];
                                         $useCase = $override->get('use_case', 'id', $bDiscription['use_case'])[0]['name'];
                                         $icu = ($override->getNews('batch_guide_records', 'batch_description_id', $bDiscription['id'], 'location_id', 1)[0]['quantity']);

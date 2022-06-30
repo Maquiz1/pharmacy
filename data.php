@@ -179,11 +179,25 @@ if ($user->isLoggedIn()) {
             } else {
                 $pageError = $validate->errors();
             }
+        } elseif (Input::get('archive_batch')) {
+            $user->updateRecord('batch', array(
+                'status' => 4,
+            ), Input::get('id'));
+
+            $user->updateRecord('batch_description', array(
+                'status' => 4,
+            ), Input::get('id'));
+
+            $successMessage = 'Medicine / Device Archived Successful';
         } elseif (Input::get('delete_batch')) {
             $user->updateRecord('batch', array(
                 'status' => 0,
             ), Input::get('id'));
-            $successMessage = 'Batch Deleted Successful';
+
+            $user->updateRecord('batch_description', array(
+                'status' => 0,
+            ), Input::get('id'));
+            $successMessage = 'Medicine / Device Destroyed / Burned Successful';
         } elseif (Input::get('edit_site')) {
             $validate = $validate->check($_POST, array(
                 'name' => array(
@@ -485,7 +499,7 @@ if ($user->isLoggedIn()) {
                                     </thead>
                                     <tbody>
                                         <?php $amnt = 0;
-                                        foreach ($override->getLessThanDate('batch', 'expire_date', $today) as $batchDesc) {
+                                        foreach ($override->getLessThanDate('batch', 'expire_date', $today, 'status', 1) as $batchDesc) {
                                             $batch_no = $override->get('batch', 'id', $batchDesc['id'])[0];
                                             $dCat = $override->get('drug_cat', 'id', $batchDesc['id'])[0];
                                             $amnt = $batchDesc['quantity'] - $batchDesc['assigned'];
@@ -512,76 +526,12 @@ if ($user->isLoggedIn()) {
                                                 </td>
 
                                                 <td>
-                                                    <a href="#study<?= $batchDesc['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">Edit</a>
-                                                    <a href="#delete<?= $batchDesc['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
+                                                    <a href="#archive<?= $batchDesc['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">Archive</a>
+                                                    <a href="#burn<?= $batchDesc['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Burn / Destroy</a>
                                                 </td>
 
                                             </tr>
-                                            <div class="modal fade" id="study<?= $batchDesc['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <form method="post">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                                                <h4>Edit Batch Description Info</h4>
-                                                            </div>
-                                                            <div class="modal-body modal-body-np">
-                                                                <div class="row">
-                                                                    <div class="block-fluid">
-                                                                        <div class="row-form clearfix">
-                                                                            <div class="col-md-3">Batch</div>
-                                                                            <div class="col-md-9">
-                                                                                <input value="<?= $override->get('batch', 'id', $batchDesc['batch_id'])[0]['name'] ?>" type="text" id="name" disabled />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="row-form clearfix">
-                                                                            <div class="col-md-3">Name:</div>
-                                                                            <div class="col-md-9">
-                                                                                <input value="<?= $batchDesc['name'] ?>" class="validate[required]" type="text" name="name" id="name" />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="row-form clearfix">
-                                                                            <div class="col-md-3">Category</div>
-                                                                            <div class="col-md-9">
-                                                                                <select name="category" style="width: 100%;" required>
-                                                                                    <option value="<?= $batchDesc['cat_id'] ?>"><?= $override->get('drug_cat', 'id', $batchDesc['cat_id'])[0]['name'] ?></option>
-                                                                                    <?php foreach ($override->getData('drug_cat') as $dCat) { ?>
-                                                                                        <option value="<?= $dCat['id'] ?>"><?= $dCat['name'] ?></option>
-                                                                                    <?php } ?>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="row-form clearfix">
-                                                                            <div class="col-md-3">Quantity:</div>
-                                                                            <div class="col-md-9">
-                                                                                <input value="<?= $batchDesc['quantity'] ?>" class="validate[required]" type="number" name="quantity" id="name" />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="row-form clearfix">
-                                                                            <div class="col-md-3">Notification Amount: </div>
-                                                                            <div class="col-md-9">
-                                                                                <input value="<?= $batchDesc['notify_amount'] ?>" class="validate[required]" type="text" name="notify_amount" required />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="dr"><span></span></div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <input type="hidden" name="batch" value="<?= $batchDesc['batch_id'] ?>">
-                                                                <input type="hidden" name="id" value="<?= $batchDesc['id'] ?>">
-                                                                <input type="submit" name="edit_batch_desc" value="Save updates" class="btn btn-warning">
-                                                                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <div class="modal fade" id="delete<?= $batchDesc['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="archive<?= $batchDesc['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <form method="post">
                                                         <div class="modal-content">
@@ -591,12 +541,34 @@ if ($user->isLoggedIn()) {
                                                             </div>
                                                             <div class="modal-body">
                                                                 <strong style="font-weight: bold;color: red">
-                                                                    <p>Are you sure you want to delete this Product</p>
+                                                                    <p>Are you sure you want to Archive this Product</p>
                                                                 </strong>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <input type="hidden" name="id" value="<?= $batchDesc['id'] ?>">
-                                                                <input type="submit" name="delete_file" value="Delete" class="btn btn-danger">
+                                                                <input type="submit" name="archive_batch" value="Archive" class="btn btn-danger">
+                                                                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="burn<?= $batchDesc['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="post">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                <h4>Delete Product</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <strong style="font-weight: bold;color: red">
+                                                                    <p>Are you sure you want to destroy / Burn this Product</p>
+                                                                </strong>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <input type="hidden" name="id" value="<?= $batchDesc['id'] ?>">
+                                                                <input type="submit" name="delete_batch" value="Burn / Destroy" class="btn btn-danger">
                                                                 <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
                                                             </div>
                                                         </div>
@@ -646,7 +618,7 @@ if ($user->isLoggedIn()) {
 
 
                                         // print_r($todayPlus30);
-                                        foreach ($override->getLessThanDate30('batch', 'expire_date', $todayPlus30) as $list) {
+                                        foreach ($override->getLessThanDate30('batch', 'expire_date', $todayPlus30, 'status', 1) as $list) {
                                             $study = $override->get('study', 'id', $list['study_id'])[0]['name'];
                                             // print_r($study);
                                         ?>
@@ -698,7 +670,7 @@ if ($user->isLoggedIn()) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($override->getLessThanDate('batch_description', 'next_check_date', $today) as $batchDesc) {
+                                        <?php foreach ($override->getLessThanDate('batch_description', 'next_check_date', $today, 'status', 1) as $batchDesc) {
                                             $batch_no = $override->get('batch', 'id', $batchDesc['batch_id'])[0];
                                             $dCat = $override->get('drug_cat', 'id', $batchDesc['cat_id'])[0] ?>
                                             <tr>
@@ -746,7 +718,7 @@ if ($user->isLoggedIn()) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($override->getLessThanDate('batch_description', 'next_check_date', $todayPlus30) as $batchDesc) {
+                                        <?php foreach ($override->getLessThanDate('batch_description', 'next_check_date', $todayPlus30, 'status', 1) as $batchDesc) {
                                             $study = $override->get('study', 'id', $batchDesc['id'])[0];
                                             $staff = $override->get('user', 'id', $batchDesc['id'])[0];
                                             $drug = $override->get('batch_description', 'id', $_GET['dsc'])[0];
@@ -764,7 +736,7 @@ if ($user->isLoggedIn()) {
                                 </table>
                             </div>
                         </div>
-                    <?php } elseif ($_GET['id'] == 9) { ?>
+                    <?php } elseif ($_GET['id'] == 19) { ?>
                         <div class="col-md-12">
                             <div class="head clearfix">
                                 <div class="isw-grid"></div>
@@ -863,7 +835,7 @@ if ($user->isLoggedIn()) {
                                             $page = ($_GET['page'] * $numRec) - $numRec;
                                         }
 
-                                        foreach ($override->get4('batch_description') as $bDiscription) {
+                                        foreach ($override->get4('batch_description', 'status', 1) as $bDiscription) {
                                             $useGroup = $override->get('use_group', 'id', $bDiscription['use_group'])[0]['name'];
                                             $useCase = $override->get('use_case', 'id', $bDiscription['use_case'])[0]['name'];
                                             $icu = ($override->getNews('batch_guide_records', 'batch_description_id', $bDiscription['id'], 'location_id', 1)[0]['quantity']);
@@ -1142,6 +1114,89 @@ if ($user->isLoggedIn()) {
                                                 <td><?= $batch['create_on'] ?></td>
                                                 <td><?= $staff ?></td>
                                             </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php } elseif ($_GET['id'] == 9) { ?>
+                        <div class="col-md-12">
+                            <div class="head clearfix">
+                                <div class="isw-grid"></div>
+                                <h1>List of Archive Medicines / Devices </h1>
+                                <ul class="buttons">
+                                    <li><a href="#" class="isw-download"></a></li>
+                                    <li><a href="#" class="isw-attachment"></a></li>
+                                    <li>
+                                        <a href="#" class="isw-settings"></a>
+                                        <ul class="dd-list">
+                                            <li><a href="#"><span class="isw-plus"></span> New document</a></li>
+                                            <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
+                                            <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="block-fluid">
+                                <table cellpadding="0" cellspacing="0" width="100%" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th width="15%">Generic Name</th>
+                                            <th width="10%">Last check date</th>
+                                            <th width="10%">Date Archived / Expired</th>
+                                            <th width="10%">Staff</th>
+                                            <th width="10%">Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $amnt = 0;
+                                        $pagNum = $override->getCount('batch', 'status', 4);
+                                        $pages = ceil($pagNum / $numRec);
+                                        if (!$_GET['page'] || $_GET['page'] == 1) {
+                                            $page = 0;
+                                        } else {
+                                            $page = ($_GET['page'] * $numRec) - $numRec;
+                                        }
+                                        foreach ($override->get('batch', 'status', 4) as $batch) {
+                                            $staff = $override->get('user', 'id', $batch['staff_id'])[0]['firstname'];
+                                            $status = $override->get('maintainance_status', 'id', $batch['status'])[0]['name'];
+                                            $name = $override->get('batch_description', 'id', $_GET['updateId'])[0]['name'];
+                                            $last_check_date = $override->get('batch_description', 'id', $_GET['updateId'])[0]['last_check_date'];
+                                            $last_check_date = $override->get('batch_description', 'batch_id', $batch['id'])[0]['next_check_date'];
+                                            // print_r($last_check_date);
+                                        ?>
+                                            <tr>
+                                                <td><?= $batch['name'] ?></td>
+                                                <td><?= $last_check_date ?></td>
+                                                <td><?= $batch['create_on'] ?></td>
+                                                <td><?= $staff ?></td>
+                                                <td>
+                                                    <a href="#destroy<?= $batch['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Burn / Destroy</a>
+                                                </td>
+                                            </tr>
+                                            <div class="modal fade" id="destroy<?= $batch['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="post">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                <h4>Delete Product</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <strong style="font-weight: bold;color: red">
+                                                                    <p>Are you sure you want to destroy / Burn this Product</p>
+                                                                </strong>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <input type="hidden" name="id" value="<?= $batch['id'] ?>">
+                                                                <input type="submit" name="delete_batch" value="Burn / Destroy" class="btn btn-danger">
+                                                                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         <?php } ?>
                                     </tbody>
                                 </table>
