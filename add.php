@@ -275,6 +275,8 @@ if ($user->isLoggedIn()) {
                                     'use_case' => Input::get('use_case'),
                                     'maintainance_type' => Input::get('maintainance_type'),
                                     'maintainance_status' => Input::get('maintainance_status'),
+                                    'last_check_date' => Input::get('last_check_date'),
+                                    'next_check_date' => Input::get('next_check_date'),
                                 ));
 
                                 $si = 0;
@@ -987,7 +989,11 @@ if ($user->isLoggedIn()) {
                                     <?php if (Input::get('location')) { ?>
                                         <label> Complete Stock Guide:
                                         </label>
-                                        <div class="col-md-2"><strong>Current Amount Is<?php echo ' '; ?><?= Input::get('amount') ?> : </strong></div>
+                                        <div class="col-md-2"><strong>Current Amount Is<?php echo ' '; ?><?= Input::get('amount') ?> : </strong>
+
+                                            <span>Notification  Amount Is<?php echo ' '; ?><?= Input::get('notify_amount') ?> </span>
+
+                                        </div>
                                         <?php
                                         $f = 0;
                                         foreach (Input::get('location') as $lctn) {

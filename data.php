@@ -1037,13 +1037,15 @@ if ($user->isLoggedIn()) {
                                     <tbody>
                                         <?php
                                         $amnt = 0;
-                                        $pagNum = $override->getCount('batch_description_records', 'batch_description_id', $_GET['did']);
+                                        $pagNum = $override->getCount4('batch_description_records', 'batch_description_id', $_GET['did']);
                                         $pages = ceil($pagNum / $numRec);
                                         if (!$_GET['page'] || $_GET['page'] == 1) {
                                             $page = 0;
                                         } else {
                                             $page = ($_GET['page'] * $numRec) - $numRec;
                                         }
+
+
                                         foreach ($override->getWithLimit('batch_description_records', 'batch_description_id', $_GET['did'], $page, $numRec) as $batch) {
                                             $staff = $override->get('user', 'id', $batch['staff_id'])[0]['firstname'];
                                             $name = $override->get('batch_description', 'batch_id', $_GET['did'])[0]['name'];
