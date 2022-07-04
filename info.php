@@ -13,7 +13,7 @@ $errorMessage = null;
 $noE = 0;
 $noC = 0;
 $noD = 0;
-$numRec = 20;
+$numRec = 13;
 $users = $override->getData('user');
 
 
@@ -3344,29 +3344,29 @@ if ($user->isLoggedIn()) {
                 <div class="pull-right">
                     <div class="btn-group">
                         <a href="info.php?page=<?php if (($_GET['page'] - 1) > 0) {
-                                                        echo $_GET['page'] - 1;
-                                                    } else {
-                                                        echo 1;
-                                                    } ?>" class="btn btn-default">
+                                                    echo $_GET['page'] - 1;
+                                                } else {
+                                                    echo 1;
+                                                } ?>" class="btn btn-default">
                             < </a>
                                 <?php for ($i = 1; $i <= $pages; $i++) { ?>
-                                    <a href="info.php?page=<?= $_GET['id'] ?>&page=<?= $i ?>" class="btn btn-default <?php if ($i == $_GET['page']) {
-                                                                                                                                echo 'active';
-                                                                                                                            } ?>"><?= $i ?></a>
+                                    <a href="info.php?id=<?= $_GET['id'] ?>&page=<?= $i ?>" class="btn btn-default <?php if ($i == $_GET['page']) {
+                                                                                                                            echo 'active';
+                                                                                                                        } ?>"><?= $i ?></a>
                                 <?php } ?>
                                 <a href="info.php?page=<?php if (($_GET['page'] + 1) <= $pages) {
-                                                                echo $_GET['page'] + 1;
-                                                            } else {
-                                                                echo $i - 1;
-                                                            } ?>" class="btn btn-default"> > </a>
+                                                            echo $_GET['page'] + 1;
+                                                        } else {
+                                                            echo $i - 1;
+                                                        } ?>" class="btn btn-default"> > </a>
                     </div>
                 </div>
                 <div class="row">
 
-                <div class="dr"><span></span></div>
+                    <div class="dr"><span></span></div>
+                </div>
             </div>
         </div>
-    </div>
 </body>
 <script>
     <?php if ($user->data()->pswd == 0) { ?>

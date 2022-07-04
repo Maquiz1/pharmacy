@@ -13,7 +13,7 @@ $errorMessage = null;
 $noE = 0;
 $noC = 0;
 $noD = 0;
-$numRec = 10;
+$numRec = 13;
 $users = $override->getData('user');
 
 $today = date('Y-m-d');
@@ -498,8 +498,21 @@ if ($user->isLoggedIn()) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $amnt = 0;
-                                        foreach ($override->getLessThanDate('batch', 'expire_date', $today, 'status', 1) as $batchDesc) {
+                                        <?php
+
+                                        $amnt = 0;
+                                        $pagNum = $override->getCount('batch', 'status', 1);
+                                        $pages = ceil($pagNum / $numRec);
+                                        // print_r($pages);
+                                        if (!$_GET['page'] || $_GET['page'] == 1) {
+                                            $page = 0;
+                                        } else {
+                                            $page = ($_GET['page'] * $numRec) - $numRec;
+                                        }
+
+
+                                        $amnt = 0;
+                                        foreach ($override->getWithLimitLessThanDate('batch', 'expire_date', $today, 'status', 1, $page, $numRec) as $batchDesc) {
                                             $batch_no = $override->get('batch', 'id', $batchDesc['id'])[0];
                                             $dCat = $override->get('drug_cat', 'id', $batchDesc['id'])[0];
                                             $amnt = $batchDesc['quantity'] - $batchDesc['assigned'];
@@ -616,9 +629,17 @@ if ($user->isLoggedIn()) {
 
                                         <?php
 
+                                        $amnt = 0;
+                                        $pagNum = $override->getCount('batch', 'status', 1);
+                                        $pages = ceil($pagNum / $numRec);
+                                        // print_r($pages);
+                                        if (!$_GET['page'] || $_GET['page'] == 1) {
+                                            $page = 0;
+                                        } else {
+                                            $page = ($_GET['page'] * $numRec) - $numRec;
+                                        }
 
-                                        // print_r($todayPlus30);
-                                        foreach ($override->getLessThanDate30('batch', 'expire_date', $todayPlus30, 'status', 1) as $list) {
+                                        foreach ($override->getWithLimitLessThan30('batch', 'expire_date', $todayPlus30, 'status', 1, $page, $numRec) as $list) {
                                             $study = $override->get('study', 'id', $list['study_id'])[0]['name'];
                                             // print_r($study);
                                         ?>
@@ -670,7 +691,18 @@ if ($user->isLoggedIn()) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($override->getLessThanDate('batch_description', 'next_check_date', $today, 'status', 1) as $batchDesc) {
+                                        <?php
+                                        $amnt = 0;
+                                        $pagNum = $override->getCount('batch', 'status', 1);
+                                        $pages = ceil($pagNum / $numRec);
+                                        // print_r($pages);
+                                        if (!$_GET['page'] || $_GET['page'] == 1) {
+                                            $page = 0;
+                                        } else {
+                                            $page = ($_GET['page'] * $numRec) - $numRec;
+                                        }
+
+                                        foreach ($override->getWithLimitLessThanDate('batch_description', 'next_check_date', $today, 'status', 1, $page, $numRec) as $batchDesc) {
                                             $batch_no = $override->get('batch', 'id', $batchDesc['batch_id'])[0];
                                             $dCat = $override->get('drug_cat', 'id', $batchDesc['cat_id'])[0] ?>
                                             <tr>
@@ -957,7 +989,7 @@ if ($user->isLoggedIn()) {
                                     <tbody>
                                         <?php
                                         $amnt = 0;
-                                        $pagNum = $override->getCount('batch', 'status', 1);
+                                        $pagNum = $override->getCount('batch_description', 'status', 1);
                                         $pages = ceil($pagNum / $numRec);
                                         if (!$_GET['page'] || $_GET['page'] == 1) {
                                             $page = 0;
@@ -965,7 +997,7 @@ if ($user->isLoggedIn()) {
                                             $page = ($_GET['page'] * $numRec) - $numRec;
                                         }
 
-                                        foreach ($override->get4('batch_description', 'status', 1) as $bDiscription) {
+                                        foreach ($override->get4('batch_description', 'status', 1,$page, $numRec) as $bDiscription) {
                                             $useGroup = $override->get('use_group', 'id', $bDiscription['use_group'])[0]['name'];
                                             $useCase = $override->get('use_case', 'id', $bDiscription['use_case'])[0]['name'];
                                             $icu = ($override->getNews('batch_guide_records', 'batch_description_id', $bDiscription['id'], 'location_id', 1)[0]['quantity']);
@@ -1290,7 +1322,7 @@ if ($user->isLoggedIn()) {
                                         } else {
                                             $page = ($_GET['page'] * $numRec) - $numRec;
                                         }
-                                        foreach ($override->get('batch', 'status', 4) as $batch) {
+                                        foreach ($override->getWithLimit('batch', 'status', 4,$page, $numRec) as $batch) {
                                             $staff = $override->get('user', 'id', $batch['staff_id'])[0]['firstname'];
                                             $status = $override->get('maintainance_status', 'id', $batch['status'])[0]['name'];
                                             $name = $override->get('batch_description', 'id', $_GET['updateId'])[0]['name'];
@@ -1335,6 +1367,26 @@ if ($user->isLoggedIn()) {
                             </div>
                         </div>
                     <?php } ?>
+                </div>
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <a href="data.php?page=<?php if (($_GET['page'] - 1) > 0) {
+                                                    echo $_GET['page'] - 1;
+                                                } else {
+                                                    echo 1;
+                                                } ?>" class="btn btn-default">
+                            < </a>
+                                <?php for ($i = 1; $i <= $pages; $i++) { ?>
+                                    <a href="data.php?id=<?= $_GET['id'] ?>&page=<?= $i ?>" class="btn btn-default <?php if ($i == $_GET['page']) {
+                                                                                                                        echo 'active';
+                                                                                                                    } ?>"><?= $i ?></a>
+                                <?php } ?>
+                                <a href="data.php?page=<?php if (($_GET['page'] + 1) <= $pages) {
+                                                            echo $_GET['page'] + 1;
+                                                        } else {
+                                                            echo $i - 1;
+                                                        } ?>" class="btn btn-default"> > </a>
+                    </div>
                 </div>
 
                 <div class="dr"><span></span></div>

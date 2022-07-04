@@ -11,7 +11,7 @@ $errorMessage = null;
 $noE = 0;
 $noC = 0;
 $noD = 0;
-$numRec = 15;
+$numRec = 10;
 $users = $override->getData('user');
 $today = date('Y-m-d');
 $todayPlus30 = date('Y-m-d', strtotime($today . ' + 30 days'));
@@ -262,7 +262,7 @@ if ($user->isLoggedIn()) {
                                         $page = ($_GET['page'] * $numRec) - $numRec;
                                     }
 
-                                    foreach ($override->get('batch_description', 'status', 1) as $bDiscription) {
+                                    foreach ($override->getWithLimit('batch_description', 'status', 1,$page, $numRec) as $bDiscription) {
                                         $useGroup = $override->get('use_group', 'id', $bDiscription['use_group'])[0]['name'];
                                         $useCase = $override->get('use_case', 'id', $bDiscription['use_case'])[0]['name'];
                                         $form = $override->get('drug_cat', 'id', $bDiscription['cat_id'])[0]['name'];
