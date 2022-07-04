@@ -2922,7 +2922,7 @@ if ($user->isLoggedIn()) {
                                                 <td>
                                                     <a href="data.php?id=8&updateId=<?= $batch['id'] ?>" class="btn btn-default">View</a>
                                                     <a href="#desc<?= $batch['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">Update</a>
-                                                    <a href="#delete<?= $batch['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
+                                                    <!-- <a href="#delete<?= $batch['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a> -->
                                                 </td>
 
                                             </tr>

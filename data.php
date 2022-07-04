@@ -650,7 +650,7 @@ if ($user->isLoggedIn()) {
                                                 <td><?= $list['amount'] ?></td>
                                                 <td><?= $list['expire_date'] ?></td>
                                                 <td>
-                                                    <a href="info.php?id=7&bt=<?= $lis['id'] ?>" class="btn btn-default">View</a>
+                                                    <!-- <a href="info.php?id=7&bt=<?= $lis['id'] ?>" class="btn btn-default">View</a> -->
                                                 </td>
 
                                             </tr>
@@ -713,7 +713,7 @@ if ($user->isLoggedIn()) {
                                                 <td> <?= $batchDesc['quantity'] ?></td>
                                                 <td> <?= $batchDesc['last_check_date'] ?></td>
                                                 <td>
-                                                    <a href="info.php?id=8&dsc=<?= $batchDesc['id'] ?>" class="btn btn-info">Details</a>
+                                                    <!-- <a href="info.php?id=8&dsc=<?= $batchDesc['id'] ?>" class="btn btn-info">Details</a> -->
                                                 </td>
                                             </tr>
                                         <?php } ?>
@@ -806,7 +806,7 @@ if ($user->isLoggedIn()) {
                                                 <td>
                                                     <a href="data.php?id=8&updateId=<?= $batch['id'] ?>" class="btn btn-default">View</a>
                                                     <a href="#desc<?= $batch['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">Update</a>
-                                                    <a href="#delete<?= $batch['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
+                                                    <!-- <a href="#delete<?= $batch['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a> -->
                                                 </td>
 
                                             </tr>
@@ -1084,7 +1084,7 @@ if ($user->isLoggedIn()) {
                                                 <td>
                                                     <a href="info.php?id=16&gid=<?= $bDiscription['id'] ?>" class="btn btn-info">View</a>
                                                     <a href="#edit_stock_guide_id<?= $bDiscription['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">Update</a>
-                                                    <a href="#delete<?= $bDiscription['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
+                                                    <!-- <a href="#delete<?= $bDiscription['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a> -->
                                                 </td>
                                             </tr>
 
@@ -1181,7 +1181,7 @@ if ($user->isLoggedIn()) {
                                         <ul class="dd-list">
                                             <li><a href="#"><span class="isw-plus"></span> New document</a></li>
                                             <li><a href="#"><span class="isw-edit"></span> Edit</a></li>
-                                            <li><a href="#"><span class="isw-delete"></span> Delete</a></li>
+                                            <!-- <li><a href="#"><span class="isw-delete"></span> Delete</a></li> -->
                                         </ul>
                                     </li>
                                 </ul>
