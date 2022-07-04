@@ -241,7 +241,7 @@ if ($user->isLoggedIn()) {
                     }
 
                     // $sumLoctn = $override->getSumD1('batch_guide_records', 'quantity', 'batch_description_id', $bDiscription['id'])[0]['SUM(quantity)'];
-                    if ($q <= Input::get('amount')) {
+                    // if ($q <= Input::get('amount')) {
                         if ($q == Input::get('notify_amount')) {
                             try {
                                 $user->createRecord('batch', array(
@@ -322,9 +322,9 @@ if ($user->isLoggedIn()) {
                         } else {
                             $errorMessage = 'Amount entered not correct amount, please re - check each location!';
                         }
-                    } else {
-                        $errorMessage = 'Amount entered exceeded the Current Available amount, Please enter the correct amount';
-                    }
+                    // } else {
+                    //     $errorMessage = 'Amount entered exceeded the Current Available amount, Please enter the correct amount';
+                    // }
                 } else {
                     $pageError = $validate->errors();
                 }

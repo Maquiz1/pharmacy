@@ -13,7 +13,7 @@ $errorMessage = null;
 $noE = 0;
 $noC = 0;
 $noD = 0;
-$numRec = 10;
+$numRec = 20;
 $users = $override->getData('user');
 
 
@@ -2862,7 +2862,7 @@ if ($user->isLoggedIn()) {
                                             <th width="15%">Generic Name</th>
                                             <th width="15%">Study</th>
                                             <th width="10%">Last Check Date</th>
-                                            <th width="10%">Last Check Status</th>
+                                            <!-- <th width="10%">Last Check Status</th> -->
                                             <th width="10%">Next Check Date</th>
                                             <th width="5%">Status</th>
                                             <th width="20%">Manage</th>
@@ -2889,21 +2889,25 @@ if ($user->isLoggedIn()) {
                                             $batchDescId = $override->get('check_records', 'batch_desc_id', $batch['id'])[0]['batch_desc_id'];
                                             $maintainance_type = $override->get('check_records', 'batch_desc_id', $batch['id'])[0]['check_type'];
                                             $lastStatus2 = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['status'];
-                                            $lastDate = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['last_check_date'];
-                                            $nextDate = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['next_check_date'];
-                                            // print_r($lastStatus2);
+                                            // $lastDate = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['last_check_date'];
+                                            // $nextDate = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['next_check_date'];
+                                            // print_r($lastDate);
+
+                                            $lastDate = $override->get('batch_description', 'batch_id', $batch['id'])[0]['last_check_date'];
+                                            $nextDate = $override->get('batch_description', 'batch_id', $batch['id'])[0]['next_check_date'];
+
                                             $amnt = $batch['amount'] - $batchItems[0]['SUM(assigned)']; ?>
                                             <tr>
                                                 <td> <a href="info.php?id=5&bt=<?= $batch['id'] ?>"><?= $batch['name'] ?></a></td>
                                                 <td><?= $study['name'] ?></td>
                                                 <td><?= $lastDate ?></td>
-                                                <td>
+                                                <!-- <td>
                                                     <?php if ($lastStatus2 == 1) { ?>
                                                         <a href="#" role="button" class="btn btn-success btn-sm">OK!</a>
                                                     <?php } else { ?>
                                                         <a href="#" role="button" class="btn btn-danger">NOT CHECKED!</a>
                                                     <?php } ?>
-                                                </td>
+                                                </td> -->
                                                 </td>
                                                 <td><?= $nextDate ?></td>
                                                 <td>
@@ -3336,6 +3340,28 @@ if ($user->isLoggedIn()) {
 
                     <?php } ?>
                 </div>
+
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <a href="info.php?page=<?php if (($_GET['page'] - 1) > 0) {
+                                                        echo $_GET['page'] - 1;
+                                                    } else {
+                                                        echo 1;
+                                                    } ?>" class="btn btn-default">
+                            < </a>
+                                <?php for ($i = 1; $i <= $pages; $i++) { ?>
+                                    <a href="info.php?page=<?= $_GET['id'] ?>&page=<?= $i ?>" class="btn btn-default <?php if ($i == $_GET['page']) {
+                                                                                                                                echo 'active';
+                                                                                                                            } ?>"><?= $i ?></a>
+                                <?php } ?>
+                                <a href="info.php?page=<?php if (($_GET['page'] + 1) <= $pages) {
+                                                                echo $_GET['page'] + 1;
+                                                            } else {
+                                                                echo $i - 1;
+                                                            } ?>" class="btn btn-default"> > </a>
+                    </div>
+                </div>
+                <div class="row">
 
                 <div class="dr"><span></span></div>
             </div>

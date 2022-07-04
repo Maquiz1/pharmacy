@@ -379,9 +379,9 @@ if ($user->isLoggedIn()) {
             ));
             if ($validate->passed()) {
                 if (Input::get('next_check_date') >= date('Y-m-d')) {
-                    if (Input::get('next_check_date') < Input::get('next_check_date_db')) {
+                    if (Input::get('next_check_date') <= Input::get('next_check_date_db')) {
                         if (Input::get('last_check_date') <= date('Y-m-d')) {
-                            if (Input::get('last_check_date') > Input::get('last_check_date_db')) {
+                            if (Input::get('last_check_date') >= Input::get('last_check_date_db')) {
                                 try {
                                     $user->createRecord('check_records', array(
                                         'batch_desc_id' => Input::get('batch_desc_id'),
@@ -693,7 +693,7 @@ if ($user->isLoggedIn()) {
                         <div class="col-md-12">
                             <div class="head clearfix">
                                 <div class="isw-grid"></div>
-                                <h1>Product Assignment</h1>
+                                <h1>Unchecked Devices / Medicines</h1>
                                 <ul class="buttons">
                                     <li><a href="#" class="isw-download"></a></li>
                                     <li><a href="#" class="isw-attachment"></a></li>
@@ -712,25 +712,155 @@ if ($user->isLoggedIn()) {
                                     <thead>
                                         <tr>
                                             <th width="15%">Generic Name</th>
-                                            <th width="25%">Study</th>
-                                            <th width="10%">Quantity</th>
-                                            <th width="25%">Action</th>
+                                            <th width="15%">Study</th>
+                                            <th width="10%">Last Check Date</th>
+                                            <!-- <th width="10%">Last Check Status</th> -->
+                                            <th width="10%">Next Check Date</th>
+                                            <th width="5%">Status</th>
+                                            <th width="20%">Manage</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($override->getLessThanDate('batch_description', 'next_check_date', $todayPlus30, 'status', 1) as $batchDesc) {
-                                            $study = $override->get('study', 'id', $batchDesc['id'])[0];
-                                            $staff = $override->get('user', 'id', $batchDesc['id'])[0];
-                                            $drug = $override->get('batch_description', 'id', $_GET['dsc'])[0];
-                                        ?>
+                                        <?php
+                                        $amnt = 0;
+                                        $pagNum = $override->getCount('batch', 'status', 1);
+                                        $pages = ceil($pagNum / $numRec);
+                                        if (!$_GET['page'] || $_GET['page'] == 1) {
+                                            $page = 0;
+                                        } else {
+                                            $page = ($_GET['page'] * $numRec) - $numRec;
+                                        }
+                                        foreach ($override->getWithLimit('batch', 'status', 1, $page, $numRec) as $batch) {
+                                            $study = $override->get('study', 'id', $batch['study_id'])[0];
+                                            $batchItems = $override->getSumD1('batch_description', 'assigned', 'batch_id', $batch['id']);
+                                            // $lastCheck = $override->get('check_records', 'batch_desc_id', $batch['id'])[0]['last_check_date'];
+                                            $currentAmount = $override->get('batch_description', 'batch_id', $batch['id'])[0]['quantity'];
+                                            $notifyAmount = $override->get('batch_description', 'batch_id', $batch['id'])[0]['quantity'];
+                                            // $lastStatus = $override->get('check_records', 'batch_desc_id', $batch['id'])[0]['status'];
+                                            // $nextCheck = $override->get('check_records', 'batch_desc_id', $batch['id'])[0]['last_check_date'];
+                                            $batchDescId = $override->get('check_records', 'batch_desc_id', $batch['id'])[0]['batch_desc_id'];
+                                            $maintainance_type = $override->get('check_records', 'batch_desc_id', $batch['id'])[0]['check_type'];
+                                            $lastStatus2 = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['status'];
+                                            // $lastDate = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['last_check_date'];
+                                            // $nextDate = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['next_check_date'];
+                                            $lastDate = $override->get('batch_description', 'batch_id', $batch['id'])[0]['last_check_date'];
+                                            $nextDate = $override->get('batch_description', 'batch_id', $batch['id'])[0]['next_check_date'];
+
+
+                                            // print_r($lastDate);
+                                            $amnt = $batch['amount'] - $batchItems[0]['SUM(assigned)']; ?>
                                             <tr>
-                                                <td><?= $batchDesc['name'] ?></a></td>
+                                                <td> <a href="info.php?id=5&bt=<?= $batch['id'] ?>"><?= $batch['name'] ?></a></td>
                                                 <td><?= $study['name'] ?></td>
-                                                <td><?= $batchDesc['quantity'] ?></td>
-                                                <td>
-                                                    <a href="info.php?id=9&dsc=<?= $_GET['dsc'] ?>" class="btn btn-default">Assigned History</a>
+                                                <td><?= $lastDate ?></td>
+                                                <!-- <td>
+                                                    <?php if ($lastStatus2 == 1) { ?>
+                                                        <a href="#" role="button" class="btn btn-success btn-sm">OK!</a>
+                                                    <?php } else { ?>
+                                                        <a href="#" role="button" class="btn btn-danger">NOT CHECKED!</a>
+                                                    <?php } ?>
+                                                </td> -->
                                                 </td>
+                                                <td><?= $nextDate ?></td>
+                                                <td>
+                                                    <?php if ($nextDate == date('Y-m-d')) { ?>
+                                                        <a href="#" role="button" class="btn btn-warning btn-sm">Check Date!</a>
+                                                    <?php } elseif ($nextDate < date('Y-m-d')) { ?>
+                                                        <a href="#" role="button" class="btn btn-danger">NOT CHECKED!</a>
+                                                    <?php } else { ?>
+                                                        <a href="#" role="button" class="btn btn-success">OK!</a>
+                                                    <?php } ?>
+                                                </td>
+                                                <td>
+                                                    <a href="data.php?id=8&updateId=<?= $batch['id'] ?>" class="btn btn-default">View</a>
+                                                    <a href="#desc<?= $batch['id'] ?>" role="button" class="btn btn-info" data-toggle="modal">Update</a>
+                                                    <a href="#delete<?= $batch['id'] ?>" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
+                                                </td>
+
                                             </tr>
+                                            <div class="modal fade" id="desc<?= $batch['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="post">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                <h4>Edit Batch Info</h4>
+                                                            </div>
+                                                            <div class="modal-body modal-body-np">
+
+
+                                                                <div class="col-sm-8">
+                                                                    <div class="row-form clearfix">
+                                                                        <!-- select -->
+                                                                        <div class="form-group">
+                                                                            <label>Maintainance Status:</label>
+                                                                            <select name="maintainance_status" style="width: 100%;" required>
+                                                                                <option value="">Select Type</option>
+                                                                                <?php foreach ($override->getData('maintainance_status') as $study) { ?>
+                                                                                    <option value="<?= $study['id'] ?>"><?= $study['name'] ?></option>
+                                                                                <?php } ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-sm-8">
+                                                                    <div class="row-form clearfix">
+                                                                        <!-- select -->
+                                                                        <div class="form-group">
+                                                                            <label>Last Check Date:</label>
+                                                                            <div class="col-md-9"><input type="date" name="last_check_date" required /> <span></span></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-sm-8">
+                                                                    <div class="row-form clearfix">
+                                                                        <!-- select -->
+                                                                        <div class="form-group">
+                                                                            <label>Next Check Date:</label>
+                                                                            <div class="col-md-9"><input type="date" name="next_check_date" required /> <span></span></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="dr"><span></span></div>
+                                                            <div class="modal-footer">
+                                                                <input type="hidden" name="id" value="<?= $batch['id'] ?>">
+                                                                <input type="hidden" name="last_check_date_db" value="<?= $lastDate ?>">
+                                                                <input type="hidden" name="next_check_date_db" value="<?= $nextDate ?>">
+                                                                <input type="hidden" name="batch_desc_id" value="<?= $batchDescId ?>">
+                                                                <input type="hidden" name="maintainance_type" value="<?= $maintainance_type ?>">
+                                                                <input type="submit" name="update_check" value="Save updates" class="btn btn-warning">
+                                                                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="delete<?= $batch['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="post">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                <h4>Delete Batch</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <strong style="font-weight: bold;color: red">
+                                                                    <p>Are you sure you want to delete this Batch</p>
+                                                                </strong>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <input type="hidden" name="id" value="<?= $batch['id'] ?>">
+                                                                <input type="submit" name="delete_batch" value="Delete" class="btn btn-danger">
+                                                                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         <?php } ?>
                                     </tbody>
                                 </table>
@@ -1010,7 +1140,7 @@ if ($user->isLoggedIn()) {
                         <div class="col-md-12">
                             <div class="head clearfix">
                                 <div class="isw-grid"></div>
-                                <h1>Use Stock Guide Description</h1>
+                                <h1>Medicine / Device History Description</h1>
                                 <ul class="buttons">
                                     <li><a href="#" class="isw-download"></a></li>
                                     <li><a href="#" class="isw-attachment"></a></li>
@@ -1165,7 +1295,7 @@ if ($user->isLoggedIn()) {
                                             $status = $override->get('maintainance_status', 'id', $batch['status'])[0]['name'];
                                             $name = $override->get('batch_description', 'id', $_GET['updateId'])[0]['name'];
                                             $last_check_date = $override->get('batch_description', 'id', $_GET['updateId'])[0]['last_check_date'];
-                                            $last_check_date = $override->get('batch_description', 'batch_id', $batch['id'])[0]['next_check_date'];
+                                            $next_check_date = $override->get('batch_description', 'batch_id', $batch['id'])[0]['next_check_date'];
                                             // print_r($last_check_date);
                                         ?>
                                             <tr>

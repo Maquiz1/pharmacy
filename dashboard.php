@@ -11,7 +11,7 @@ $errorMessage = null;
 $noE = 0;
 $noC = 0;
 $noD = 0;
-$numRec = 10;
+$numRec = 15;
 $users = $override->getData('user');
 $today = date('Y-m-d');
 $todayPlus30 = date('Y-m-d', strtotime($today . ' + 30 days'));
@@ -117,7 +117,7 @@ if ($user->isLoggedIn()) {
                                         <!--240,234,150,290,310,240,210,400,320,198,250,222,111,240,221,340,250,190-->
                                     </span>
                                     <span class="number">
-                                        <span class="number"><?= $override->getCount2('batch', 'expire_date', $todayPlus30,'status',1) ?></span>
+                                        <span class="number"><?= $override->getCount2('batch', 'expire_date', $todayPlus30, 'status', 1) ?></span>
                                 </div>
                             </a>
                         </div>
@@ -131,7 +131,7 @@ if ($user->isLoggedIn()) {
                                     <span class="mChartBar" sparkType="bar" sparkBarColor="white">
                                         <!--5,10,15,20,23,21,25,20,15,10,25,20,10-->
                                     </span>
-                                    <span class="number"><?= $override->getCount2('batch_description', 'next_check_date', $todayPlus30,'status',1) ?></span>
+                                    <span class="number"><?= $override->getCount2('batch_description', 'next_check_date', $todayPlus30, 'status', 1) ?></span>
                                 </div>
                             </a>
                         </div>
@@ -146,7 +146,7 @@ if ($user->isLoggedIn()) {
                                     <span class="mChartBar" sparkType="bar" sparkBarColor="white">
                                         <!--240,234,150,290,310,240,210,400,320,198,250,222,111,240,221,340,250,190-->
                                     </span>
-                                    <span class="number"><?= $override->getCount1('batch', 'expire_date', $today,'status',1) ?></span>
+                                    <span class="number"><?= $override->getCount1('batch_description', 'next_check_date', $today, 'status', 1) ?></span>
                                 </div>
                             </div>
                         </a>
@@ -160,7 +160,7 @@ if ($user->isLoggedIn()) {
                                     <span class="mChartBar" sparkType="bar" sparkBarColor="white">
                                         <!--240,234,150,290,310,240,210,400,320,198,250,222,111,240,221,340,250,190-->
                                     </span>
-                                    <span class="number"><?= $override->getCount3('batch_description','status',1) ?></span>
+                                    <span class="number"><?= $override->getCount3('batch_description', 'status', 1) ?></span>
                                 </div>
                             </div>
                         </a>
@@ -174,7 +174,7 @@ if ($user->isLoggedIn()) {
                                     <span class="mChartBar" sparkType="bar" sparkBarColor="white">
                                         <!--130,190,260,230,290,400,340,360,390-->
                                     </span>
-                                    <span class="number"><?= $override->getCount1('batch', 'expire_date', $today,'status',1) ?></span>
+                                    <span class="number"><?= $override->getCount1('batch', 'expire_date', $today, 'status', 1) ?></span>
                                 </div>
                             </a>
                         </div>
@@ -236,6 +236,7 @@ if ($user->isLoggedIn()) {
                                         <th width="10%">Generic Name</th>
                                         <th width="5%"> Group</th>
                                         <th width="5%"> Use Case</th>
+                                        <th width="5%">Form</th>
                                         <th width="5%">Current Quantity</th>
                                         <!-- <th width="5%">Current Used</th> -->
                                         <th width="5%">Re-stock Level</th>
@@ -253,7 +254,7 @@ if ($user->isLoggedIn()) {
                                 <tbody>
                                     <?php
                                     $amnt = 0;
-                                    $pagNum = $override->getCount('batch', 'status', 1);
+                                    $pagNum = $override->getCount('batch_description', 'status', 1);
                                     $pages = ceil($pagNum / $numRec);
                                     if (!$_GET['page'] || $_GET['page'] == 1) {
                                         $page = 0;
@@ -261,9 +262,10 @@ if ($user->isLoggedIn()) {
                                         $page = ($_GET['page'] * $numRec) - $numRec;
                                     }
 
-                                    foreach ($override->get('batch_description','status',1) as $bDiscription) {
+                                    foreach ($override->get('batch_description', 'status', 1) as $bDiscription) {
                                         $useGroup = $override->get('use_group', 'id', $bDiscription['use_group'])[0]['name'];
                                         $useCase = $override->get('use_case', 'id', $bDiscription['use_case'])[0]['name'];
+                                        $form = $override->get('drug_cat', 'id', $bDiscription['cat_id'])[0]['name'];
                                         $icu = ($override->getNews('batch_guide_records', 'batch_description_id', $bDiscription['id'], 'location_id', 1)[0]['quantity']);
                                         $EmKit = $override->getNews('batch_guide_records', 'batch_description_id', $bDiscription['id'], 'location_id', 2)[0]['quantity'];
                                         $EmBuffer = $override->getNews('batch_guide_records', 'batch_description_id', $bDiscription['id'], 'location_id', 3)[0]['quantity'];
@@ -278,6 +280,7 @@ if ($user->isLoggedIn()) {
                                             <td><?= $bDiscription['name'] ?></td>
                                             <td><?= $useGroup ?></td>
                                             <td><?= $useCase ?></td>
+                                            <td><?= $form ?></td>
                                             <td><?= $bDiscription['quantity'] ?></td>
                                             <td><?= $bDiscription['notify_amount'] ?></td>
                                             <td><?php if ($icu) {
@@ -398,11 +401,11 @@ if ($user->isLoggedIn()) {
                                                             <input type="hidden" name="id" value="<?= $bDiscription['id'] ?>">
                                                             <input type="hidden" name="quantity" value="<?= $bDiscription['quantity'] ?>">
                                                             <input type="hidden" name="assigned" value="<?= $bDiscription['assigned'] ?>">
-                                                            <input type="hidden" name="notify_amount" value="<?= $bDiscription['notify_amount'] ?>">	
-                                                            <input type="hidden" name="status" value="<?= $bDiscription['maintainance_status'] ?>">                                                          
+                                                            <input type="hidden" name="notify_amount" value="<?= $bDiscription['notify_amount'] ?>">
+                                                            <input type="hidden" name="status" value="<?= $bDiscription['maintainance_status'] ?>">
                                                             <input type="hidden" name="use_group" value="<?= $bDiscription['use_group'] ?>">
                                                             <input type="hidden" name="use_case" value="<?= $bDiscription['use_case'] ?>">
-                                                            <input type="hidden" name="quantity_db" value="<?= $bDiscription['quantity'] ?>">	
+                                                            <input type="hidden" name="quantity_db" value="<?= $bDiscription['quantity'] ?>">
                                                             <input type="submit" name="update_stock_guide" value="Save updates" class="btn btn-warning">
                                                             <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
                                                         </div>

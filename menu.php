@@ -142,6 +142,9 @@ if ($user->data()->accessLevel == 1) {
                         <a href="add.php?id=12">
                             <span class="glyphicon glyphicon-home"></span><span class="text">Add Maintainance Type</span>
                         </a>
+                        <a href="import.php?id=2">
+                            <span class="glyphicon glyphicon-home"></span><span class="text">Import</span>
+                        </a>
                     </li>
                     <li>
                         <a href="info.php?id=2">
