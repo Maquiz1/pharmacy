@@ -88,12 +88,12 @@ if ($user->isLoggedIn()) {
                         $use_group = $getData[24];
                         $use_case = $getData[25];
                         $maintainance_status = $getData[26];
+                        $form_og = $getData[30];
+                        $concentration_unit = $getData[31];
 
                         // $assigned = $amount - $notify_amount;
 
                         $date = explode('/', $getData[8]);
-                        $last_date = explode('/', $getData[9]);
-
                         if (strlen($date[0]) != '2') {
                             $date[0] = '0' . $date[0];
                         } else {
@@ -105,10 +105,10 @@ if ($user->isLoggedIn()) {
                         } else {
                             $date[1] = $date[1];
                         }
-
                         $expire_date = $date[2] . '-' . $date[0] . '-' . $date[1];
 
 
+                        $last_date = explode('/', $getData[9]);
                         if (strlen($last_date[0]) != '2') {
                             $last_date[0] = '0' . $last_date[0];
                         } else {
@@ -121,10 +121,7 @@ if ($user->isLoggedIn()) {
                             $last_date[1] = $last_date[1];
                         }
 
-                        $last_check_date = $date[2] . '-' . $date[0] . '-' . $date[1];
-
-                        // print_r($getData);
-
+                        $last_check_date = $last_date[2] . '-' . $last_date[0] . '-' . $last_date[1];
 
                         $user->createRecord('batch', array(
                             'name' => $generic_name,
@@ -162,6 +159,8 @@ if ($user->isLoggedIn()) {
                             'maintainance_status' => $maintainance_status,
                             'maintainance_type' => $maintainance_type,
                             'last_status' => $maintainance_status,
+                            'form_og' => $form_og,
+                            'concentration_unit' => $concentration_unit,
 
                         ));
 

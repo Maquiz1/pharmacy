@@ -679,7 +679,7 @@ if ($user->isLoggedIn()) {
                                                 <td><?= $batch_no['batch_no'] ?></td>
                                                 <td><?= $dCat['name'] ?></td>
                                                 <td> <?= $batchDesc['quantity'] ?></td>
-                                                <td> <?= $batchDesc['next_check_date'] ?></td>
+                                                <td> <?= $batchDesc['last_check_date'] ?></td>
                                                 <td>
                                                     <a href="info.php?id=8&dsc=<?= $batchDesc['id'] ?>" class="btn btn-info">Details</a>
                                                 </td>
@@ -743,7 +743,7 @@ if ($user->isLoggedIn()) {
                                             $lastStatus2 = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['status'];
                                             // $lastDate = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['last_check_date'];
                                             // $nextDate = $override->lastRow2('check_records', 'batch_desc_id', $batchDescId, 'id')[0]['next_check_date'];
-                                            $lastDate = $override->get('batch_description', 'batch_id', $batch['id'])[0]['last_check_date'];
+                                            $lastDate = $override->get('batch_description', 'id', $batch['id'])[0]['last_check_date'];
                                             $nextDate = $override->get('batch_description', 'batch_id', $batch['id'])[0]['next_check_date'];
 
 
