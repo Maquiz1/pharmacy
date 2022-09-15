@@ -379,7 +379,7 @@ if ($user->isLoggedIn()) {
             ));
             if ($validate->passed()) {
                 if (Input::get('next_check_date') >= date('Y-m-d')) {
-                    if (Input::get('next_check_date') <= Input::get('next_check_date_db')) {
+                    // if (Input::get('next_check_date') <= Input::get('next_check_date_db')) {
                         if (Input::get('last_check_date') <= date('Y-m-d')) {
                             if (Input::get('last_check_date') >= Input::get('last_check_date_db')) {
                                 try {
@@ -403,9 +403,9 @@ if ($user->isLoggedIn()) {
                         } else {
                             $errorMessage = 'Last Date can not be of Future';
                         }
-                    } else {
-                        $errorMessage = 'Next Date not correct';
-                    }
+                    // } else {
+                    //     $errorMessage = 'Next Date not correct';
+                    // }
                 } else {
                     $errorMessage = 'Next Date can not be of Past';
                 }
@@ -841,7 +841,7 @@ if ($user->isLoggedIn()) {
                                                                         <!-- select -->
                                                                         <div class="form-group">
                                                                             <label>Last Check Date:</label>
-                                                                            <div class="col-md-9"><input type="date" name="last_check_date" required /> <span></span></div>
+                                                                            <div class="col-md-9"><input type="date" name="last_check_date" value='<?= $lastDate ?>' readonly /> <span></span></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>

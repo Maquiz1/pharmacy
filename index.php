@@ -103,6 +103,7 @@ if(!$user->isLoggedIn()) {
         </div>
     <?php }?>
     <div class="loginForm">
+
         <form class="form-horizontal" method="post" id="validation">
             <div class="form-group">
                 <div class="input-group">
